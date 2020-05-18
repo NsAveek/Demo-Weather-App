@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Carsome Weather App</string>
     <string name="title_activity_base">BaseActivity</string>
+    <string name="degree_in_celcius">%.1f \u2103</string>
 </resources>
