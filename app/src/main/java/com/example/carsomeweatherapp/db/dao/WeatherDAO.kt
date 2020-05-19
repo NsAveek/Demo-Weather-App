@@ -18,5 +18,5 @@ interface WeatherDAO  {
 
     @Query("SELECT * FROM `weathermodel`")
 
-    fun getAllTransactions() : Single<List<WeatherModel>>
+    fun getAllData() : Single<List<WeatherModel>>
 }

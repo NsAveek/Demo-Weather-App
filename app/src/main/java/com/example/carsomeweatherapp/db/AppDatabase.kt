@@ -10,7 +10,7 @@ import com.example.carsomeweatherapp.db.dao.WeatherDAO
 
 @Database(entities=[WeatherModel::class], version=1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun transactionDao(): WeatherDAO
+    abstract fun weatherDao(): WeatherDAO
     companion object {
         var INSTANCE: AppDatabase? = null
 

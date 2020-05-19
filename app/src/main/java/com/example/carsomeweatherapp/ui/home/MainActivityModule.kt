@@ -15,8 +15,4 @@ import javax.inject.Inject
 @Module
 class  MainActivityModule(){
 
-//    @Provides
-//    fun viewModel (remoteDataSource: RemoteDataSource) : MainActivityViewModel = ViewModelProviders.of(context,
-//        MainAcitivityVMFactory(remoteDataSource)).get(MainActivityViewModel::class.java)
-
 }

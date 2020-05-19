@@ -8,6 +8,7 @@ import com.example.carsomeweatherapp.core.repository.RemoteDataSource
 import com.example.carsomeweatherapp.ui.home.MainActivity
 import com.example.carsomeweatherapp.ui.home.MainActivityModule
 import com.example.carsomeweatherapp.ui.home.MainActivityVMModule
+import com.example.carsomeweatherapp.ui.home.cities.CitiesVMModule
 import com.example.carsomeweatherapp.utils.appID
 import com.example.carsomeweatherapp.utils.baseUrl
 import com.example.carsomeweatherapp.viewModel.ViewModelFactoryModule
@@ -43,16 +44,10 @@ interface AppComponent : AndroidInjector<BaseApp> {
 @Module
 internal class AppModule{
 
-//    @Provides
-//    @Singleton
-//    fun provideContext (application: Application) : Context{
-//        return application
-//    }
-
     @Provides
     @Singleton
-    fun provideAppId() : String{
-        return appID
+    fun provideContext (application: Application) : Context{
+        return application
     }
 
     @Provides
@@ -81,7 +76,7 @@ internal class AppModule{
 @Module
 internal abstract class LocalDependencyBuilder{
 
-    @ContributesAndroidInjector(modules = [MainActivityModule::class,MainActivityVMModule::class])
+    @ContributesAndroidInjector(modules = [MainActivityModule::class,MainActivityVMModule::class,CitiesVMModule::class])
     abstract fun bindMainActivity() : MainActivity
 }
 

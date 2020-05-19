@@ -10,9 +10,9 @@ import retrofit2.http.Query;
 public interface AppService {
 
 
-
     @GET("weather")
     Observable<WeatherData> getWeatherByCityName(@Query("q") String cityName,
                                                  @Query("APPID") String appID,
                                                  @Query("units") String units);
+
 }
