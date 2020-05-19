@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+
+        <variable
+            name="jsonCitiesViewModel"
+            type="com.example.carsomeweatherapp.ui.home.cities.JSONCitiesViewModel" />
+        <variable
+            name="data"
+            type="String"/>
+        <variable
+            name="itemPosition"
+            type="Integer"/>
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="24dp"
+            android:minHeight="20dp"
+            android:text="@{data}"
+            android:onClick="@{() -> jsonCitiesViewModel.onItemClick(data)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Kuala Lumpur" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</layout>
+
+

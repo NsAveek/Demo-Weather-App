@@ -11,6 +11,8 @@ import com.example.carsomeweatherapp.ui.home.MainActivity
 import com.example.carsomeweatherapp.ui.home.MainActivityModule
 import com.example.carsomeweatherapp.ui.home.MainActivityVMModule
 import com.example.carsomeweatherapp.ui.home.cities.CitiesVMModule
+import com.example.carsomeweatherapp.ui.home.cities.JSONCitiesVMModule
+import com.example.carsomeweatherapp.ui.home.cities.JSONCitiesViewModel
 import com.example.carsomeweatherapp.ui.home.cities.WeatherForecastVMModule
 import com.example.carsomeweatherapp.utils.SHARED_PREF_NAME
 import com.example.carsomeweatherapp.utils.baseUrl
@@ -95,7 +97,8 @@ internal abstract class LocalDependencyBuilder{
     @ContributesAndroidInjector(modules = [MainActivityModule::class,
         MainActivityVMModule::class,
         CitiesVMModule::class,
-        WeatherForecastVMModule::class])
+        WeatherForecastVMModule::class,
+        JSONCitiesVMModule::class])
     abstract fun bindMainActivity() : MainActivity
 }
 
