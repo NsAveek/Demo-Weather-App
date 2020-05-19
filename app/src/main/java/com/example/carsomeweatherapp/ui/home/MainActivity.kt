@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import aveek.com.management.ui.db.AppDatabase
 import com.example.carsomeweatherapp.BaseApp
 import com.example.carsomeweatherapp.R
+import com.example.carsomeweatherapp.core.events.ListenToCityAdapterItemCall
 import com.example.carsomeweatherapp.databinding.ActivityMainBinding
 import com.example.carsomeweatherapp.db.WeatherModel
 import com.example.carsomeweatherapp.model.WeatherData
@@ -27,6 +28,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Action
 import io.reactivex.schedulers.Schedulers
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import retrofit2.HttpException
 import java.util.*
 import javax.inject.Inject
@@ -88,8 +92,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
     }
 
 
-
-
     private fun initDatabase() {
         database = AppDatabase.getAppDataBase(this)!!
     }
@@ -97,7 +99,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
     private fun insertInitialDataInsideDB() {
         compositeDisposable.add(
             Completable.fromAction {
-                val thread = Thread{
+                val thread = Thread {
                     with(database) {
                         weatherDao().insert(
                             WeatherModel(
@@ -108,13 +110,13 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                         weatherDao().insert(
                             WeatherModel(
                                 UUID.randomUUID().toString(),
-                                "Johor Bahru"
+                                "George Town"
                             )
                         )
                         weatherDao().insert(
                             WeatherModel(
                                 UUID.randomUUID().toString(),
-                                "George Town"
+                                "Johor Bahru"
                             )
                         )
                     }
@@ -185,7 +187,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
         val isNetworkAvailable = true
         binding.viewModel?.let { localViewModel ->
             with(localViewModel) {
-                weatherCondition.value = "Cloudy"
                 getWeatherDataClick.observe(this@MainActivity, Observer { weatherLiveData ->
                     weatherLiveData.getContentIfNotHandled()?.let {
                         if (isNetworkAvailable) {
@@ -215,9 +216,10 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
         }
     }
 
-    private fun successCallBack(){
-        Toast.makeText(this,"Success",Toast.LENGTH_LONG).show()
+    private fun successCallBack() {
+        Toast.makeText(this, "Success", Toast.LENGTH_LONG).show()
     }
+
     private fun errorCallback(error: Throwable) {
         if (error is HttpException) {
 
@@ -227,6 +229,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
     override fun onStart() {
         super.onStart()
         mLifecycleRegistry.markState(Lifecycle.State.STARTED)
+        EventBus.getDefault().register(this)
     }
 
     override fun onResume() {
@@ -241,6 +244,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
 
     override fun onStop() {
         super.onStop()
+        EventBus.getDefault().unregister(this);
     }
 
     override fun onDestroy() {
@@ -251,5 +255,52 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentDispatchingAndroidInjector
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: ListenToCityAdapterItemCall) {
+        with(binding) {
+            viewModel?.let {
+                it.cityName?.let { valueName ->
+                    valueName.set(event.getMessage())
+                }
+                it.openWeatherData()
+            }
+        }
+//        processRequest(binding,event.getMessage())
+    }
+
+    fun processRequest(binding: ActivityMainBinding, cityNameData: String) {
+        val isNetworkAvailable = true
+        binding.viewModel?.let { localViewModel ->
+            with(localViewModel) {
+                openWeatherData()
+                getWeatherDataClick.observe(this@MainActivity, Observer { weatherLiveData ->
+                    weatherLiveData.getContentIfNotHandled()?.let {
+                        if (isNetworkAvailable) {
+                            getWeatherData().observe(this@MainActivity, Observer {
+                                it?.let { pair ->
+                                    if (pair.first == EnumDataState.SUCCESS.type) {
+                                        with(pair.second as WeatherData) {
+                                            weatherCondition.value = this.weather[0].main
+                                            temparatureInDegreeCelcius.value = String.format(
+                                                this@MainActivity.getString(R.string.degree_in_celcius),
+                                                this.main.temp
+                                            )
+                                        }
+                                    } else if (pair.first == EnumDataState.ERROR.type) {
+                                        with(pair.second as Throwable) {
+                                            errorCallback(this)
+                                        }
+                                    }
+                                }
+                            })
+                        } else {
+//                            showNetWorkNotAvailableDialog()
+                        }
+                    }
+                })
+            }
+        }
     }
 }

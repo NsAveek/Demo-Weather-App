@@ -68,8 +68,8 @@ internal class AppModule{
 
     @Provides
     @Singleton
-    fun provideRemoteDataSource() : RemoteDataSource {
-        return RemoteDataSource(appServiceProvider(retrofit = provideRetrofitInstance()))
+    fun provideRemoteDataSource(appService: AppService) : RemoteDataSource {
+        return RemoteDataSource(appService)
     }
 }
 

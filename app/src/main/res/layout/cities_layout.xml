@@ -1,40 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout 
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="viewModel"
             type="com.example.carsomeweatherapp.ui.home.cities.CitiesViewModel" />
+        <variable
+            name="cityName"
+            type="String" />
     </data>
+
+
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
+    android:layout_width="300dp"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
+    android:background="@color/transparent"
+    android:onClick="@{()-> viewModel.passCityName(cityName)}"
     >
 
-    <ImageView
-        android:id="@+id/imageView"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/kl_city"
+        android:layout_height="200dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        card_view:cardCornerRadius="8dp">
 
-    <TextView
-        android:id="@+id/textView3"
-        style="@style/city_title_style"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
-        android:text="@{viewModel.citiesName}"
-        />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/kl_city" />
+
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/city_title_style"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:text="@{viewModel.citiesName}"
+            tools:text="Kuala Lumpur" />
+
+    </androidx.cardview.widget.CardView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

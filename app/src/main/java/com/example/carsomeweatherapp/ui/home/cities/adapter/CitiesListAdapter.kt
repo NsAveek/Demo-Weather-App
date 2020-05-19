@@ -141,9 +141,11 @@ class CitiesListAdapter (val context : MainActivity) : RecyclerView.Adapter<Recy
          * @return none
          */
         fun bind(data: WeatherModel) {
-
-            binding.viewModel = CitiesViewModel().apply {
-                citiesName.value = data.cityName
+            with(binding){
+                viewModel = CitiesViewModel().apply {
+                    citiesName.value = data.cityName
+                }
+                cityName = data.cityName
             }
         }
     }
