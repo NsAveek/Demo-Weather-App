@@ -29,5 +29,22 @@
         <item name="android:lineSpacingExtra">4sp</item>
         <item name="android:gravity">center</item>
     </style>
+    <style name="app_title_style">
+        <item name="android:textSize">30sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/disable_grey</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="forecast_time_style">
+        <item name="android:textSize">30sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:gravity">center</item>
+    </style>
 
 </resources>

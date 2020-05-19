@@ -6,4 +6,11 @@
     <color name="disable_grey">#dbdbdb</color>
     <color name="white">#ffffff</color>
     <color name="transparent">#80ffffff</color>
+
+
+    <color name="lightBlue">#4cb0d1</color>
+    <color name="lightYellow">#f8cb7a</color>
+    <color name="darkSlateBlue">#314f71</color>
+    <color name="lightSlateGray">#857db7</color>
+    <color name="indianRed">#c2636c</color>
 </resources>

@@ -1,24 +1,29 @@
 package com.example.carsomeweatherapp.ui.home
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import aveek.com.management.ui.db.AppDatabase
-import com.example.carsomeweatherapp.BaseApp
 import com.example.carsomeweatherapp.R
 import com.example.carsomeweatherapp.core.events.ListenToCityAdapterItemCall
 import com.example.carsomeweatherapp.databinding.ActivityMainBinding
 import com.example.carsomeweatherapp.db.WeatherModel
 import com.example.carsomeweatherapp.model.WeatherData
+import com.example.carsomeweatherapp.model.forecast.ForecastCustomizedModel
+import com.example.carsomeweatherapp.model.forecast.ForecastData
 import com.example.carsomeweatherapp.network.NetworkActivity
 import com.example.carsomeweatherapp.ui.home.cities.adapter.CitiesListAdapter
+import com.example.carsomeweatherapp.ui.home.cities.adapter.WeatherForecastListAdapter
 import com.example.carsomeweatherapp.utils.EnumDataState
+import com.example.carsomeweatherapp.utils.getDate
 import com.example.carsomeweatherapp.viewModel.ViewModelProviderFactory
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -26,7 +31,6 @@ import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Action
 import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -34,6 +38,7 @@ import org.greenrobot.eventbus.ThreadMode
 import retrofit2.HttpException
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInjector {
 
@@ -56,7 +61,11 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
 
     private lateinit var citiesListAdapter: CitiesListAdapter
     private lateinit var citiesRecyclerView: RecyclerView
-    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var citiesListLayoutManager: LinearLayoutManager
+
+    private lateinit var weatherForecastListAdapter: WeatherForecastListAdapter
+    private lateinit var weatherForecastRecyclerView: RecyclerView
+    private lateinit var weatherForecastListLayoutManager: LinearLayoutManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,17 +77,24 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
         viewModel = ViewModelProviders.of(this, viewModelProviderFactory)
             .get(MainActivityViewModel::class.java)
 
-        layoutManager = LinearLayoutManager(this).apply {
+        citiesListLayoutManager = LinearLayoutManager(this).apply {
+            orientation = LinearLayoutManager.HORIZONTAL
+        }
+        weatherForecastListLayoutManager = LinearLayoutManager(this).apply {
             orientation = LinearLayoutManager.HORIZONTAL
         }
 
         initDatabase()
 
-        insertInitialDataInsideDB()
+        if (isAppRunningFirstTime) {
+            insertInitialDataInsideDB()
+        }
 
         initBinding()
 
         initCitiesAdapter()
+
+        initWeatherForecastListAdapter()
 
         mLifecycleRegistry = LifecycleRegistry(this).apply {
             markState(Lifecycle.State.CREATED)
@@ -88,7 +104,33 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
 
         initCitiesRecyclerView()
 
+        initWeatherForecastRecyclerView()
+
         loadInitialDataToCitiesAdapter()
+
+    }
+
+    private fun initWeatherForecastRecyclerView() {
+        weatherForecastRecyclerView = findViewById<RecyclerView>(R.id.rcv_future_weather).apply {
+            this.layoutManager = this@MainActivity.weatherForecastListLayoutManager
+            this.adapter = this@MainActivity.weatherForecastListAdapter
+        }.also {
+            it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (dy > 0) { // Detects if it is scrolling downwards
+                        val lastVisibleItemPosition =
+                            (it.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                        if (lastVisibleItemPosition == weatherForecastListAdapter.itemCount - 1) {
+                        }
+                    }
+                }
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                }
+            })
+        }
     }
 
 
@@ -139,8 +181,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                 errorCallback(it)
             })
         compositeDisposable.add(disposable)
-
-
     }
 
 
@@ -153,25 +193,22 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
     private fun initCitiesAdapter() {
         citiesListAdapter = CitiesListAdapter(this)
     }
+    private fun initWeatherForecastListAdapter() {
+        weatherForecastListAdapter = WeatherForecastListAdapter(this,viewModelProviderFactory)
+    }
 
     private fun initCitiesRecyclerView() {
         citiesRecyclerView = findViewById<RecyclerView>(R.id.cities_recycler_view).apply {
-            this.layoutManager = this@MainActivity.layoutManager
+            this.layoutManager = this@MainActivity.citiesListLayoutManager
             this.adapter = this@MainActivity.citiesListAdapter
         }.also {
             it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-
                     if (dy > 0) { // Detects if it is scrolling downwards
                         val lastVisibleItemPosition =
                             (it.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                         if (lastVisibleItemPosition == citiesListAdapter.itemCount - 1) {
-//                            if (isNetworkAvailable) {
-//                                if (contentSize < totalCount && !isLoading) { // isLoading = false
-//                                    loadMoreRecyclerData(pageNumber = ++pageNumber, pageSize = defaultPageSize, numberOfDays = numberOfDays)
-//                                }
-//                            }
                         }
                     }
                 }
@@ -207,6 +244,21 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                                     }
                                 }
                             })
+                            getWeatherForecastData().observe(this@MainActivity, Observer {
+                                it?.let { pair ->
+                                    if (pair.first == EnumDataState.SUCCESS.type) {
+                                        with(pair.second as ForecastData) {
+                                            weatherForecastListAdapter.setData(prepareForecastAdapter(this))
+                                        }
+                                    }
+                                    else{
+                                        with(pair.second as Throwable) {
+                                            errorCallback(this)
+                                        }
+                                    }
+                                }
+                            })
+
                         } else {
 //                            showNetWorkNotAvailableDialog()
                         }
@@ -214,6 +266,29 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                 })
             }
         }
+    }
+
+    private fun prepareForecastAdapter(forecastData: ForecastData): List<ForecastCustomizedModel> {
+
+        val listOfForecastAdapter = ArrayList<ForecastCustomizedModel>()
+
+        val list = forecastData.list
+        // TODO : Filter date
+        for (listWeatherInfo in list) {
+
+            Toast.makeText(this, getDate(listWeatherInfo.dtTxt).toString(), Toast.LENGTH_LONG).show()
+
+            val forecastCustomizedModel = ForecastCustomizedModel().apply {
+                this.location = forecastData.city.name
+                this.dayOfTheWeek = com.example.carsomeweatherapp.utils.getDayOfTheWeek(listWeatherInfo.dtTxt)
+                this.dateOfTheMonth = com.example.carsomeweatherapp.utils.getDateOfTheMonth(listWeatherInfo.dtTxt)
+                this.monthOfTheYear = com.example.carsomeweatherapp.utils.getMonthOfTheYear(listWeatherInfo.dtTxt)
+                this.temperature = listWeatherInfo.main.temp.toString()
+                this.weatherType = listWeatherInfo.weather[0].main
+            }
+            listOfForecastAdapter.add(forecastCustomizedModel)
+        }
+        return listOfForecastAdapter
     }
 
     private fun successCallBack() {

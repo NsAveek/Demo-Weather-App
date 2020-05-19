@@ -2,6 +2,8 @@ package com.example.carsomeweatherapp.di
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.example.carsomeweatherapp.BaseApp
 import com.example.carsomeweatherapp.core.network.AppService
 import com.example.carsomeweatherapp.core.repository.RemoteDataSource
@@ -9,11 +11,15 @@ import com.example.carsomeweatherapp.ui.home.MainActivity
 import com.example.carsomeweatherapp.ui.home.MainActivityModule
 import com.example.carsomeweatherapp.ui.home.MainActivityVMModule
 import com.example.carsomeweatherapp.ui.home.cities.CitiesVMModule
-import com.example.carsomeweatherapp.utils.appID
+import com.example.carsomeweatherapp.ui.home.cities.WeatherForecastVMModule
+import com.example.carsomeweatherapp.utils.SHARED_PREF_NAME
 import com.example.carsomeweatherapp.utils.baseUrl
 import com.example.carsomeweatherapp.viewModel.ViewModelFactoryModule
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import dagger.*
+import dagger.BindsInstance
+import dagger.Component
+import dagger.Module
+import dagger.Provides
 import dagger.android.AndroidInjector
 import dagger.android.ContributesAndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
@@ -71,12 +77,25 @@ internal class AppModule{
     fun provideRemoteDataSource(appService: AppService) : RemoteDataSource {
         return RemoteDataSource(appService)
     }
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(application: Application): SharedPreferences {
+        return application.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE)
+    }
+    @Singleton
+    @Provides
+    fun provideSharedPreferencesEditor(sharedPreferences: SharedPreferences): SharedPreferences.Editor {
+        return sharedPreferences.edit()
+    }
 }
 
 @Module
 internal abstract class LocalDependencyBuilder{
 
-    @ContributesAndroidInjector(modules = [MainActivityModule::class,MainActivityVMModule::class,CitiesVMModule::class])
+    @ContributesAndroidInjector(modules = [MainActivityModule::class,
+        MainActivityVMModule::class,
+        CitiesVMModule::class,
+        WeatherForecastVMModule::class])
     abstract fun bindMainActivity() : MainActivity
 }
 
