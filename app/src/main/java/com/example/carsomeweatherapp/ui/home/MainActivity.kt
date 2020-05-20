@@ -374,21 +374,26 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
     private fun prepareForecastAdapter(forecastData: ForecastData): List<ForecastCustomizedModel> {
 
         val listOfForecastAdapter = ArrayList<ForecastCustomizedModel>()
-
+        val uniqueDate = ArrayList<Int>()
         val list = forecastData.list
-        // TODO : Filter date
-        for (listWeatherInfo in list) {
 
+        for (listWeatherInfo in list) {
+            val dateOfTheMonth = com.example.carsomeweatherapp.utils.getDateOfTheMonth(listWeatherInfo.dtTxt)
+            if(uniqueDate.contains(dateOfTheMonth)){
+                continue
+            }
+            uniqueDate.add(dateOfTheMonth)
             val forecastCustomizedModel = ForecastCustomizedModel().apply {
                 this.location = forecastData.city.name
-                this.dayOfTheWeek =
-                    com.example.carsomeweatherapp.utils.getDayOfTheWeek(listWeatherInfo.dtTxt)
-                this.dateOfTheMonth =
-                    com.example.carsomeweatherapp.utils.getDateOfTheMonth(listWeatherInfo.dtTxt)
+                this.dayOfTheWeek = com.example.carsomeweatherapp.utils.getDayOfTheWeek(listWeatherInfo.dtTxt)
+
+                this.dateOfTheMonth = dateOfTheMonth
+
                 this.monthOfTheYear =
                     com.example.carsomeweatherapp.utils.getMonthOfTheYear(listWeatherInfo.dtTxt)
                 this.temperature = listWeatherInfo.main.temp.toString()
                 this.weatherType = listWeatherInfo.weather[0].main
+                this.time = com.example.carsomeweatherapp.utils.getTime(listWeatherInfo.dtTxt)
             }
             listOfForecastAdapter.add(forecastCustomizedModel)
         }
@@ -496,6 +501,9 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                     it?.let { pair ->
                         if (pair.first == EnumDataState.SUCCESS.type) {
                             with(pair.second as WeatherData) {
+
+                                cityName.set(this.name)
+
                                 weatherCondition.value = this.weather[0].main
                                 temparatureInDegreeCelcius.value = String.format(
                                     this@MainActivity.getString(R.string.degree_in_celcius),

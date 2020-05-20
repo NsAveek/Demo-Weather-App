@@ -3,6 +3,7 @@ package com.example.carsomeweatherapp.ui.home.cities.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.carsomeweatherapp.R
@@ -30,7 +31,7 @@ class WeatherForecastListAdapter @Inject constructor(val context : MainActivity,
             }
             else -> {
                 RegularTransactionViewHolder(DataBindingUtil.inflate(LayoutInflater.from(context),
-                        R.layout.cities_forecast_layout, parent, false),viewModel)
+                        R.layout.cities_forecast_layout, parent, false),viewModel,context)
             }
         }
     }
@@ -114,7 +115,7 @@ class WeatherForecastListAdapter @Inject constructor(val context : MainActivity,
      * @version 1
      * @since Version 1.0
      */
-    class RegularTransactionViewHolder(val binding : CitiesForecastLayoutBinding,viewModel: WeatherForecastViewModel)
+    class RegularTransactionViewHolder(val binding : CitiesForecastLayoutBinding,viewModel: WeatherForecastViewModel, val context: MainActivity)
         : RecyclerView.ViewHolder(binding.root){
 
         /**
@@ -127,6 +128,19 @@ class WeatherForecastListAdapter @Inject constructor(val context : MainActivity,
                 viewModel = WeatherForecastViewModel().apply {
 //                    citiesName.value = data.cityName
                     temperature.set(data.temperature)
+                    date.set("${data.dayOfTheWeek}, ${data.dateOfTheMonth} ${data.monthOfTheYear}")
+                    weatherType.set(data.weatherType)
+                    time.set(data.time)
+                    when(data.weatherType){
+                        "Clouds" -> {
+                            backgroundColor.set(ContextCompat.getColor(context,R.color.lightBlue))
+                            iconDrawable.set(ContextCompat.getDrawable(context,R.drawable.ic_cloudy))
+                        }
+                        else -> {
+                            backgroundColor.set(ContextCompat.getColor(context,R.color.lightYellow))
+                            iconDrawable.set(ContextCompat.getDrawable(context,R.drawable.ic_sunny))
+                        }
+                    }
                 }
             }
         }

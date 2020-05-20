@@ -4,6 +4,7 @@ public class ForecastCustomizedModel {
     String temperature;
     String weatherType;
     String date;
+    String time;
     String dayOfTheWeek;
     String monthOfTheYear;
     int dateOfTheMonth;
@@ -63,5 +64,15 @@ public class ForecastCustomizedModel {
 
     public void setDateOfTheMonth(int dateOfTheMonth) {
         this.dateOfTheMonth = dateOfTheMonth;
+    }
+
+
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
