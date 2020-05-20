@@ -14,7 +14,21 @@ class RemoteDataSource @Inject constructor(var appService : AppService): IWeathe
         return appService.getWeatherByCityName(cityName, appID, baseUnit)
     }
 
+    override fun getWeatherDataByLatLong(
+        latitude: String,
+        longitude: String
+    ): Observable<WeatherData> {
+        return appService.getWeatherByLatLong(latitude,longitude, appID, baseUnit)
+    }
+
     override fun getWeatherForecastDataByCityName(cityName: String): Observable<ForecastData> {
         return appService.getWeatherForecastByCityName(cityName, appID, baseUnit)
+    }
+
+    override fun getWeatherForecastDataByLatLong(
+        latitude: String,
+        longitude: String
+    ): Observable<ForecastData> {
+        return appService.getWeatherForecastByLatLong(latitude,longitude, appID, baseUnit)
     }
 }

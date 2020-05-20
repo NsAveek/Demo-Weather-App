@@ -13,4 +13,6 @@
     <color name="darkSlateBlue">#314f71</color>
     <color name="lightSlateGray">#857db7</color>
     <color name="indianRed">#c2636c</color>
+
+    <color name="primary">@color/indianRed</color>
 </resources>

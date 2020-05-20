@@ -14,10 +14,20 @@ public interface AppService {
     @GET("weather")
     Observable<WeatherData> getWeatherByCityName(@Query("q") String cityName,
                                                  @Query("APPID") String appID,
-                                                 @Query("units") String units);
+                                                 @Query("units") String units);@GET("weather")
+    Observable<WeatherData> getWeatherByLatLong(@Query("lat") String latitude,
+                                                @Query("lon") String longitude,
+                                                @Query("APPID") String appID,
+                                                @Query("units") String units);
     @GET("forecast")
     Observable<ForecastData> getWeatherForecastByCityName(@Query("q") String cityName,
                                                           @Query("APPID") String appID,
                                                           @Query("units") String units);
+    @GET("forecast")
+    Observable<ForecastData> getWeatherForecastByLatLong(@Query("lat") String latitude,
+                                                         @Query("lon") String longitude,
+                                                         @Query("APPID") String appID,
+                                                         @Query("units") String units);
+
 
 }

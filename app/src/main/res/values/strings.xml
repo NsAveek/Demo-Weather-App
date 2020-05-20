@@ -2,4 +2,8 @@
     <string name="app_name">Carsome Weather App</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="degree_in_celcius">%.1f \u2103</string>
+
+    <string name="kuala_lumpur">Kuala Lumpur</string>
+    <string name="johor_bahru">Johor Bahru</string>
+    <string name="george_town">George Town</string>
 </resources>
