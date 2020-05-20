@@ -22,6 +22,8 @@ class MainActivityViewModel @Inject constructor(val remoteDataSource: RemoteData
 
     val getLocationRequestClick = MutableLiveData<CustomEventLiveData<Boolean>>()
 
+    val getShowAllCitiesClick = MutableLiveData<CustomEventLiveData<Boolean>>()
+
     val cityName = ObservableField<String>()
 
     val latitude = ObservableField<String>()
@@ -43,6 +45,10 @@ class MainActivityViewModel @Inject constructor(val remoteDataSource: RemoteData
 
     fun openLocationRequest() {
         getLocationRequestClick.value = CustomEventLiveData(true)
+    }
+
+    fun openCitiesList(){
+        getShowAllCitiesClick.value = CustomEventLiveData(true)
     }
 
 

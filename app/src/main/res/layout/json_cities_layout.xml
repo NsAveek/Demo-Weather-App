@@ -7,6 +7,9 @@
     <data>
 
         <variable
+            name="citiesViewModel"
+            type="com.example.carsomeweatherapp.ui.cities.CitiesListViewModel" />
+        <variable
             name="jsonCitiesViewModel"
             type="com.example.carsomeweatherapp.ui.home.cities.JSONCitiesViewModel" />
         <variable
@@ -21,6 +24,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:onClick="@{()-> citiesViewModel.onItemClick(data)}"
         >
         <TextView
             android:layout_width="0dp"
@@ -30,7 +34,8 @@
             android:layout_marginTop="24dp"
             android:minHeight="20dp"
             android:text="@{data}"
-            android:onClick="@{() -> jsonCitiesViewModel.onItemClick(data)}"
+            android:textColor="@color/detail_label_dark"
+            android:onClick="@{() -> citiesViewModel.onItemClick(data)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"

@@ -41,7 +41,7 @@
             android:background="@drawable/kl_city" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/cities_title"
             style="@style/city_title_style"
             android:layout_width="match_parent"
             android:layout_height="200dp"

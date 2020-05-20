@@ -7,6 +7,8 @@ import androidx.preference.PreferenceManager
 import com.example.carsomeweatherapp.BaseApp
 import com.example.carsomeweatherapp.core.network.AppService
 import com.example.carsomeweatherapp.core.repository.RemoteDataSource
+import com.example.carsomeweatherapp.ui.cities.CitiesBottomSheetFragment
+import com.example.carsomeweatherapp.ui.cities.CitiesBottomSheetVMModule
 import com.example.carsomeweatherapp.ui.home.MainActivity
 import com.example.carsomeweatherapp.ui.home.MainActivityModule
 import com.example.carsomeweatherapp.ui.home.MainActivityVMModule
@@ -98,9 +100,15 @@ internal abstract class LocalDependencyBuilder{
         MainActivityVMModule::class,
         CitiesVMModule::class,
         WeatherForecastVMModule::class,
-        JSONCitiesVMModule::class])
+        JSONCitiesVMModule::class,
+        MainActivityFragmentsProvider::class])
     abstract fun bindMainActivity() : MainActivity
 }
 
 
+@Module
+internal abstract class MainActivityFragmentsProvider{
+    @ContributesAndroidInjector(modules = [CitiesBottomSheetVMModule::class])
+    abstract fun bindCitiesBottomSheetFragment() : CitiesBottomSheetFragment
+}
 

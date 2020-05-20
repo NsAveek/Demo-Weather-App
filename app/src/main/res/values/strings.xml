@@ -6,4 +6,43 @@
     <string name="kuala_lumpur">Kuala Lumpur</string>
     <string name="johor_bahru">Johor Bahru</string>
     <string name="george_town">George Town</string>
+
+    <string-array name="all_cities">
+        <item>Butterworth</item>
+        <item>Melaka</item>
+        <item>Ipoh</item>
+        <item>Kuching</item>
+        <item>Kota Kinabalu</item>
+        <item>Kampong Baharu</item>
+        <item>Shah Alam</item>
+        <item>Sandakan</item>
+        <item>Seremban Garden</item>
+        <item>Kuantan</item>
+        <item>Kampung Sungai Pasir</item>
+        <item>Kuala Terengganu</item>
+        <item>Alor Setar</item>
+        <item>Tawau</item>
+        <item>Taiping</item>
+        <item>Miri</item>
+        <item>Sibu</item>
+        <item>Batu Pahat</item>
+        <item>Muar</item>
+        <item>Bintulu</item>
+        <item>Lahad Datu</item>
+        <item>Teluk Intan</item>
+        <item>Cukai</item>
+        <item>Kangar</item>
+        <item>Raub</item>
+        <item>Kuala Lipis</item>
+        <item>Klang</item>
+        <item>Seremban</item>
+        <item>Kampung Lemal</item>
+        <item>Kuching</item>
+        <item>Ketereh</item>
+        <item>Tumpat</item>
+        <item>Victoria</item>
+        <item>Pasir Mas</item>
+        <item>Kota Bharu</item>
+        <item>Pulai Chondong</item>
+    </string-array>
 </resources>

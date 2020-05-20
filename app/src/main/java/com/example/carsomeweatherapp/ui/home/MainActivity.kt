@@ -31,6 +31,7 @@ import com.example.carsomeweatherapp.model.WeatherData
 import com.example.carsomeweatherapp.model.forecast.ForecastCustomizedModel
 import com.example.carsomeweatherapp.model.forecast.ForecastData
 import com.example.carsomeweatherapp.network.NetworkActivity
+import com.example.carsomeweatherapp.ui.cities.CitiesBottomSheetFragment
 import com.example.carsomeweatherapp.ui.home.cities.adapter.CitiesListAdapter
 import com.example.carsomeweatherapp.ui.home.cities.adapter.WeatherForecastListAdapter
 import com.example.carsomeweatherapp.utils.EnumDataState
@@ -270,7 +271,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                 thread.start()
             }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this@MainActivity::successCallBack, this@MainActivity::errorCallback)
+                .subscribe(this@MainActivity::successInsertionData, this@MainActivity::errorCallback)
         )
     }
 
@@ -316,6 +317,11 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
 
         binding.viewModel?.let { localViewModel ->
             with(localViewModel) {
+                getShowAllCitiesClick.observe(this@MainActivity, Observer { allCities ->
+                    CitiesBottomSheetFragment.getCitiesBottomSheetFragment().apply {
+                        show(supportFragmentManager,null)
+                    }
+                })
                 getLocationRequestClick.observe(this@MainActivity, Observer { locationRequest ->
                     locationRequest.getContentIfNotHandled()?.let {
                         if (it) {
@@ -359,11 +365,8 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                                     }
                                 }
                             })
-
-
-
                         } else {
-//                            networkNotAvailable()()
+                            networkNotAvailable()
                         }
                     }
                 })
@@ -402,6 +405,9 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
 
     private fun successCallBack() {
         Toast.makeText(this, "Success", Toast.LENGTH_LONG).show()
+    }
+    private fun successInsertionData() {
+        citiesListAdapter.notifyItemInserted(citiesListAdapter.itemCount-1)
     }
 
     private fun errorCallback(error: Throwable) {
