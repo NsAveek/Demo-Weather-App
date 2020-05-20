@@ -10,6 +10,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -404,7 +405,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
     }
 
     private fun successCallBack() {
-        Toast.makeText(this, "Success", Toast.LENGTH_LONG).show()
+        Log.d("success_call","Success")
     }
     private fun successInsertionData() {
         citiesListAdapter.notifyDataSetChanged()
@@ -615,6 +616,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
     }
 
     private fun requestPermissions() {
+        Toast.makeText(this,"Please allow permission manually if it does not automatically allows", Toast.LENGTH_SHORT).show()
         val array = arrayOfNulls<String>(permissions.size)
         ActivityCompat.requestPermissions(
                 this,
