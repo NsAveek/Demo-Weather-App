@@ -407,7 +407,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
         Toast.makeText(this, "Success", Toast.LENGTH_LONG).show()
     }
     private fun successInsertionData() {
-        citiesListAdapter.notifyItemInserted(citiesListAdapter.itemCount-1)
+        citiesListAdapter.notifyDataSetChanged()
     }
 
     private fun errorCallback(error: Throwable) {
