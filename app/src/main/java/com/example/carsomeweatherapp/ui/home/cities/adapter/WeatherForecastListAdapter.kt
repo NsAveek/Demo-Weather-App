@@ -136,8 +136,16 @@ class WeatherForecastListAdapter @Inject constructor(val context : MainActivity,
                             backgroundColor.set(ContextCompat.getColor(context,R.color.lightBlue))
                             iconDrawable.set(ContextCompat.getDrawable(context,R.drawable.ic_cloudy))
                         }
+                        "Rain" ->{
+                            backgroundColor.set(ContextCompat.getColor(context,R.color.darkSlateBlue))
+                            iconDrawable.set(ContextCompat.getDrawable(context,R.drawable.ic_rain))
+                        }
+                        "Clear" ->{
+                            backgroundColor.set(ContextCompat.getColor(context,R.color.lightSlateGray))
+                            iconDrawable.set(ContextCompat.getDrawable(context,R.drawable.ic_sunny))
+                        }
                         else -> {
-                            backgroundColor.set(ContextCompat.getColor(context,R.color.lightYellow))
+                            backgroundColor.set(ContextCompat.getColor(context,R.color.indianRed))
                             iconDrawable.set(ContextCompat.getDrawable(context,R.drawable.ic_sunny))
                         }
                     }
