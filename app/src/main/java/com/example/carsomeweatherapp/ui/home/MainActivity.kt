@@ -28,6 +28,7 @@ import com.example.carsomeweatherapp.core.events.ListenToCityAdapterItemCall
 import com.example.carsomeweatherapp.core.events.ListenToJSONCityAdapterItemCall
 import com.example.carsomeweatherapp.databinding.ActivityMainBinding
 import com.example.carsomeweatherapp.db.WeatherModel
+import com.example.carsomeweatherapp.db.dao.WeatherDAO
 import com.example.carsomeweatherapp.model.WeatherData
 import com.example.carsomeweatherapp.model.forecast.ForecastCustomizedModel
 import com.example.carsomeweatherapp.model.forecast.ForecastData
@@ -63,17 +64,20 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
     @Inject
     lateinit var viewModelProviderFactory: ViewModelProviderFactory
 
+    @Inject
+    lateinit var database : AppDatabase
+
+    @Inject
+    lateinit var weatherDao : WeatherDAO
+
+    @Inject
+    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
     private lateinit var viewModel: MainActivityViewModel
 
     private lateinit var mLifecycleRegistry: LifecycleRegistry
 
     private lateinit var binding: ActivityMainBinding
-
-    @Inject
-    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
-
-    // TODO : Inject Database
-    private lateinit var database: AppDatabase
 
     private lateinit var compositeDisposable: CompositeDisposable
 
@@ -123,8 +127,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
             orientation = LinearLayoutManager.HORIZONTAL
         }
 
-        initDatabase()
-
         if (isAppRunningFirstTime) {
             insertInitialDataInsideDB()
         }
@@ -156,10 +158,8 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
 
     private fun locationHandler() {
         permissions = ArrayList<String>()
-
         permissions.add(ACCESS_FINE_LOCATION)
         permissions.add(ACCESS_COARSE_LOCATION)
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
 //        getLastLocation()
@@ -172,7 +172,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
         try {
             json = this.assets.open(textFileName)
 
-            val inData: BufferedReader = BufferedReader(InputStreamReader(json, "UTF-8"))
+            val inData = BufferedReader(InputStreamReader(json, "UTF-8"))
 
             while (inData.readLine() != null) {
                 strJSON = inData.readLine()
@@ -211,34 +211,28 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
         }
     }
 
-    private fun initDatabase() {
-        database = AppDatabase.getAppDataBase(this)!!
-    }
-
     private fun insertInitialDataInsideDB() {
         compositeDisposable.add(
             Completable.fromAction {
                 val thread = Thread {
-                    with(database) {
-                        weatherDao().insert(
+                        weatherDao.insert(
                             WeatherModel(
                                 UUID.randomUUID().toString(),
                                 getString(R.string.kuala_lumpur)
                             )
                         )
-                        weatherDao().insert(
+                        weatherDao.insert(
                             WeatherModel(
                                 UUID.randomUUID().toString(),
                                 getString(R.string.george_town)
                             )
                         )
-                        weatherDao().insert(
+                        weatherDao.insert(
                             WeatherModel(
                                 UUID.randomUUID().toString(),
                                 getString(R.string.johor_bahru)
                             )
                         )
-                    }
                 }
                 thread.start()
             }.subscribeOn(Schedulers.io())
@@ -275,7 +269,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                 .subscribe(this@MainActivity::successInsertionData, this@MainActivity::errorCallback)
         )
     }
-
 
     private fun initBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -407,6 +400,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
     private fun successCallBack() {
         Log.d("success_call","Success")
     }
+
     private fun successInsertionData() {
         citiesListAdapter.notifyDataSetChanged()
     }
@@ -582,7 +576,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
         }
     }
 
-
     @SuppressLint("MissingPermission")
     private fun requestNewLocationData(){
 
@@ -616,7 +609,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
     }
 
     private fun requestPermissions() {
-        Toast.makeText(this,"Please allow permission manually if it does not automatically allows", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this,"Please allow permission manually if it does not automatically allow", Toast.LENGTH_SHORT).show()
         val array = arrayOfNulls<String>(permissions.size)
         ActivityCompat.requestPermissions(
                 this,
@@ -632,7 +625,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
         )
     }
 
-
     override fun onRequestPermissionsResult(requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray) {
@@ -643,5 +635,4 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
             }
         }
     }
-
 }

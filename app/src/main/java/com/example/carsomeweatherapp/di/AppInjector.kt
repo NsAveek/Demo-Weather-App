@@ -8,7 +8,7 @@ import com.example.carsomeweatherapp.BaseApp
 object AppInjector {
     fun init(app : BaseApp){
         DaggerAppComponent.builder()
-                .application(app)
+                .application(app) // AppModule bindsInstance of App
                 .build()
                 .inject(app)
         app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks{

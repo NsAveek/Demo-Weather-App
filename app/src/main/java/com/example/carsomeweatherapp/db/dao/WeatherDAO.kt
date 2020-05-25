@@ -8,15 +8,8 @@ import com.example.carsomeweatherapp.db.WeatherModel
 import io.reactivex.Single
 
 @Dao
-interface WeatherDAO  {
-
-    @Insert
-    fun insert(weatherModel : WeatherModel)
-
-    @Delete
-    fun delete(weatherModel: WeatherModel)
+interface WeatherDAO : BaseDAO<WeatherModel> {
 
     @Query("SELECT * FROM `weathermodel`")
-
     fun getAllData() : Single<List<WeatherModel>>
 }

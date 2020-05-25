@@ -1,4 +1,4 @@
-package com.example.carsomeweatherapp.ui.home.cities
+package com.example.carsomeweatherapp.di.scope.main
 
 import androidx.lifecycle.ViewModel
 import com.example.carsomeweatherapp.ui.home.cities.CitiesViewModel

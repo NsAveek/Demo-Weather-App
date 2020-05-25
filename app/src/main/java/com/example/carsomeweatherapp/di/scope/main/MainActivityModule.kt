@@ -1,4 +1,4 @@
-package com.example.carsomeweatherapp.ui.home
+package com.example.carsomeweatherapp.di.scope.main
 
 import android.app.Application
 import android.content.Context

@@ -1,6 +1,7 @@
-package com.example.carsomeweatherapp.ui.home.cities
+package com.example.carsomeweatherapp.di.scope.main
 
 import androidx.lifecycle.ViewModel
+import com.example.carsomeweatherapp.ui.home.cities.JSONCitiesViewModel
 import com.example.carsomeweatherapp.viewModel.ViewModelKey
 import dagger.Binds
 import dagger.Module

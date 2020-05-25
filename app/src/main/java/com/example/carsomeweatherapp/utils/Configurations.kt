@@ -19,12 +19,6 @@ fun getDate(date: String): StringBuilder {
     val year = cal[Calendar.YEAR]
     val month = cal[Calendar.MONTH]-1
     val day = cal[Calendar.DAY_OF_MONTH]
-
-
-
-
-
-
     return StringBuilder().append(year).append(" ").append(month).append(" ").append(day)
 }
 fun getDayOfTheWeek(date: String) : String{
