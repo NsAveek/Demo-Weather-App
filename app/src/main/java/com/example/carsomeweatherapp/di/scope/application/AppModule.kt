@@ -3,7 +3,8 @@ package com.example.carsomeweatherapp.di.scope.application
 import android.app.Application
 import android.content.Context
 import com.example.carsomeweatherapp.core.network.AppService
-import com.example.carsomeweatherapp.core.repository.RemoteDataSource
+import com.example.carsomeweatherapp.core.repository.RemoteDataSourceRepository
+import com.example.carsomeweatherapp.db.dao.WeatherDAO
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -19,9 +20,7 @@ internal class AppModule{
 
     @Provides
     @Singleton
-    fun provideRemoteDataSource(appService: AppService) : RemoteDataSource {
-        return RemoteDataSource(appService)
+    fun provideRemoteDataSource(appService: AppService,weatherDAO: WeatherDAO) : RemoteDataSourceRepository {
+        return RemoteDataSourceRepository(appService,weatherDAO)
     }
-
-
 }

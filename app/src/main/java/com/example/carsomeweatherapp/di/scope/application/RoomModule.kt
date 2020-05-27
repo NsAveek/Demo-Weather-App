@@ -14,27 +14,6 @@ import javax.inject.Singleton
 @Module
 class RoomModule {
 
-
-    /*
-    companion object {
-        var INSTANCE: AppDatabase? = null
-
-        fun getAppDataBase(context: Context): AppDatabase? {
-            if (INSTANCE == null){
-                synchronized(AppDatabase::class){
-                    INSTANCE = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "weatherDB").build()
-                }
-            }
-            return INSTANCE
-        }
-
-        fun destroyDataBase(){
-            INSTANCE = null
-        }
-    }
-    * */
-
-
     @Provides
     @Singleton
     fun provideRoomDatabase(applicationContext : Application) : AppDatabase {

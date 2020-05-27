@@ -143,7 +143,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
 
         handleObserver(binding)
 
-
         initCitiesRecyclerView()
 
         initWeatherForecastRecyclerView()
@@ -215,24 +214,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
         compositeDisposable.add(
             Completable.fromAction {
                 val thread = Thread {
-                        weatherDao.insert(
-                            WeatherModel(
-                                UUID.randomUUID().toString(),
-                                getString(R.string.kuala_lumpur)
-                            )
-                        )
-                        weatherDao.insert(
-                            WeatherModel(
-                                UUID.randomUUID().toString(),
-                                getString(R.string.george_town)
-                            )
-                        )
-                        weatherDao.insert(
-                            WeatherModel(
-                                UUID.randomUUID().toString(),
-                                getString(R.string.johor_bahru)
-                            )
-                        )
+                    viewModel.insertInitialDataInsideDB()
                 }
                 thread.start()
             }.subscribeOn(Schedulers.io())
@@ -243,25 +225,23 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
 
     private fun loadInitialDataToCitiesAdapter() {
         citiesListAdapter.clearData()
-        val disposable = database.weatherDao().getAllData()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                citiesListAdapter.setData(it)
-            }, {
-                errorCallback(it)
-            })
-        compositeDisposable.add(disposable)
+        viewModel.getAllLocallyStoredWeatherData().observe(this, Observer {
+            it?.let {pair ->
+                if(pair.first == EnumDataState.SUCCESS.type){
+                    citiesListAdapter.setData(pair.second as List<WeatherModel>)
+                }else{
+                    errorCallback(pair.second as Throwable)
+                }
+            }
+        })
+//        compositeDisposable.add(disposable)
     }
 
     private fun insertDataToDatabase(data: String) {
         compositeDisposable.add(
             Completable.fromAction {
                 val thread = Thread {
-                    with(database) {
-                        this.weatherDao()
-                            .insert(WeatherModel(UUID.randomUUID().toString(), cityName = data))
-                    }
+                    viewModel.insertDataInsideWeatherDB(WeatherModel(UUID.randomUUID().toString(), cityName = data))
                 }
                 thread.start()
             }.subscribeOn(Schedulers.io())
