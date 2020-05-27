@@ -8,6 +8,8 @@ import com.example.carsomeweatherapp.R
 import com.example.carsomeweatherapp.core.repository.RemoteDataSourceRepository
 import com.example.carsomeweatherapp.db.WeatherModel
 import com.example.carsomeweatherapp.db.dao.WeatherDAO
+import com.example.carsomeweatherapp.model.forecast.ForecastCustomizedModel
+import com.example.carsomeweatherapp.model.forecast.ListWeatherInfo
 import com.example.carsomeweatherapp.utils.CustomEventLiveData
 import com.example.carsomeweatherapp.utils.EnumDataState
 import com.example.carsomeweatherapp.utils.PairLocal
@@ -15,6 +17,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 class MainActivityViewModel @Inject constructor(
@@ -58,6 +61,39 @@ class MainActivityViewModel @Inject constructor(
         getShowAllCitiesClick.value = CustomEventLiveData(true)
     }
 
+    fun prepareForecastAdapterData(
+        list: List<ListWeatherInfo>,
+        cityName: String
+    ): MutableLiveData<List<ForecastCustomizedModel>> {
+        val listOfForecastAdapterLiveData = MutableLiveData<List<ForecastCustomizedModel>>()
+        val listOfForecastAdapter = ArrayList<ForecastCustomizedModel>()
+        val uniqueDate = ArrayList<Int>()
+        for (listWeatherInfo in list) {
+            val dateOfTheMonth =
+                com.example.carsomeweatherapp.utils.getDateOfTheMonth(listWeatherInfo.dtTxt)
+            if (uniqueDate.contains(dateOfTheMonth)) {
+                continue
+            }
+            uniqueDate.add(dateOfTheMonth)
+            val forecastCustomizedModel = ForecastCustomizedModel().apply {
+                this.location = cityName
+                this.dayOfTheWeek =
+                    com.example.carsomeweatherapp.utils.getDayOfTheWeek(listWeatherInfo.dtTxt)
+
+                this.dateOfTheMonth = dateOfTheMonth
+
+                this.monthOfTheYear =
+                    com.example.carsomeweatherapp.utils.getMonthOfTheYear(listWeatherInfo.dtTxt)
+                this.temperature = listWeatherInfo.main.temp.toString()
+                this.weatherType = listWeatherInfo.weather[0].main
+                this.time = com.example.carsomeweatherapp.utils.getTime(listWeatherInfo.dtTxt)
+            }
+            listOfForecastAdapter.add(forecastCustomizedModel)
+        }
+        listOfForecastAdapterLiveData.value = listOfForecastAdapter
+
+        return listOfForecastAdapterLiveData
+    }
 
     fun getWeatherData(): MutableLiveData<PairLocal<String, Any>> {
         val data = MutableLiveData<PairLocal<String, Any>>()
@@ -124,7 +160,7 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun insertInitialDataInsideDB() {
-        with(remoteDataSourceRepository){
+        with(remoteDataSourceRepository) {
             insertWeatherDataIntoLocalStorage(
                 WeatherModel(
                     UUID.randomUUID().toString(),
@@ -146,11 +182,11 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    fun insertDataInsideWeatherDB(model: WeatherModel){
+    fun insertDataInsideWeatherDB(model: WeatherModel) {
         remoteDataSourceRepository.insertWeatherDataIntoLocalStorage(model)
     }
 
-    fun getAllLocallyStoredWeatherData() : MutableLiveData<PairLocal<String,Any>>{
+    fun getAllLocallyStoredWeatherData(): MutableLiveData<PairLocal<String, Any>> {
         val data = MutableLiveData<PairLocal<String, Any>>()
         remoteDataSourceRepository.getAllLocallyStoredWeatherData()
             .subscribeOn(Schedulers.io())

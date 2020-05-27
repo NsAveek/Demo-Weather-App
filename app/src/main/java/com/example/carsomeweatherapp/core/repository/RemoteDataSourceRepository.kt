@@ -11,7 +11,10 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
 
-class RemoteDataSourceRepository @Inject constructor(val appService : AppService, val weatherDAO: WeatherDAO): IWeatherRepository,ILocalStorageRepository {
+class RemoteDataSourceRepository @Inject constructor(
+    val appService: AppService,
+    val weatherDAO: WeatherDAO
+) : IWeatherRepository, ILocalStorageRepository {
 
     override fun getWeatherDataByCityName(cityName: String): Observable<WeatherData> {
         return appService.getWeatherByCityName(cityName, appID, baseUnit)
@@ -21,7 +24,7 @@ class RemoteDataSourceRepository @Inject constructor(val appService : AppService
         latitude: String,
         longitude: String
     ): Observable<WeatherData> {
-        return appService.getWeatherByLatLong(latitude,longitude, appID, baseUnit)
+        return appService.getWeatherByLatLong(latitude, longitude, appID, baseUnit)
     }
 
     override fun getWeatherForecastDataByCityName(cityName: String): Observable<ForecastData> {
@@ -32,7 +35,7 @@ class RemoteDataSourceRepository @Inject constructor(val appService : AppService
         latitude: String,
         longitude: String
     ): Observable<ForecastData> {
-        return appService.getWeatherForecastByLatLong(latitude,longitude, appID, baseUnit)
+        return appService.getWeatherForecastByLatLong(latitude, longitude, appID, baseUnit)
     }
 
     override fun getAllLocallyStoredWeatherData(): Single<List<WeatherModel>> {
@@ -42,5 +45,4 @@ class RemoteDataSourceRepository @Inject constructor(val appService : AppService
     override fun insertWeatherDataIntoLocalStorage(model: WeatherModel) {
         weatherDAO.insert(model)
     }
-
 }

@@ -65,12 +65,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
     lateinit var viewModelProviderFactory: ViewModelProviderFactory
 
     @Inject
-    lateinit var database : AppDatabase
-
-    @Inject
-    lateinit var weatherDao : WeatherDAO
-
-    @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private lateinit var viewModel: MainActivityViewModel
@@ -328,9 +322,10 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                                     if (pair.first == EnumDataState.SUCCESS.type) {
                                         with(pair.second as ForecastData) {
                                             weatherForecastListAdapter.clearData()
-                                            weatherForecastListAdapter.setData(
-                                                prepareForecastAdapter(this)
-                                            )
+                                            prepareForecastAdapter(this)
+//                                            weatherForecastListAdapter.setData(
+//                                                prepareForecastAdapter(this)
+//                                            )
                                         }
                                     } else {
                                         with(pair.second as Throwable) {
@@ -348,33 +343,12 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
         }
     }
 
-    private fun prepareForecastAdapter(forecastData: ForecastData): List<ForecastCustomizedModel> {
-
-        val listOfForecastAdapter = ArrayList<ForecastCustomizedModel>()
-        val uniqueDate = ArrayList<Int>()
-        val list = forecastData.list
-
-        for (listWeatherInfo in list) {
-            val dateOfTheMonth = com.example.carsomeweatherapp.utils.getDateOfTheMonth(listWeatherInfo.dtTxt)
-            if(uniqueDate.contains(dateOfTheMonth)){
-                continue
+    private fun prepareForecastAdapter(forecastData: ForecastData) {
+        viewModel.prepareForecastAdapterData(forecastData.list, forecastData.city.name).observe(this, Observer {
+            it?.let {
+                weatherForecastListAdapter.setData(it)
             }
-            uniqueDate.add(dateOfTheMonth)
-            val forecastCustomizedModel = ForecastCustomizedModel().apply {
-                this.location = forecastData.city.name
-                this.dayOfTheWeek = com.example.carsomeweatherapp.utils.getDayOfTheWeek(listWeatherInfo.dtTxt)
-
-                this.dateOfTheMonth = dateOfTheMonth
-
-                this.monthOfTheYear =
-                    com.example.carsomeweatherapp.utils.getMonthOfTheYear(listWeatherInfo.dtTxt)
-                this.temperature = listWeatherInfo.main.temp.toString()
-                this.weatherType = listWeatherInfo.weather[0].main
-                this.time = com.example.carsomeweatherapp.utils.getTime(listWeatherInfo.dtTxt)
-            }
-            listOfForecastAdapter.add(forecastCustomizedModel)
-        }
-        return listOfForecastAdapter
+        })
     }
 
     private fun successCallBack() {
@@ -503,9 +477,10 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                         if (pair.first == EnumDataState.SUCCESS.type) {
                             with(pair.second as ForecastData) {
                                 weatherForecastListAdapter.clearData()
-                                weatherForecastListAdapter.setData(
-                                    prepareForecastAdapter(this)
-                                )
+                                prepareForecastAdapter(this)
+//                                weatherForecastListAdapter.setData(
+//                                    prepareForecastAdapter(this)
+//                                )
                             }
                         } else {
                             with(pair.second as Throwable) {
