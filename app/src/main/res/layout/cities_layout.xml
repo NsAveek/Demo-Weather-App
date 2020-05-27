@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.carsomeweatherapp.ui.home.cities.CitiesViewModel" />
+            type="com.example.demoweatherapp.ui.home.cities.CitiesViewModel" />
         <variable
             name="cityName"
             type="String" />
@@ -38,7 +38,7 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/kl_city" />
+            android:background="@{viewModel.backgroundDrawable}" />
 
         <TextView
             android:id="@+id/cities_title"
