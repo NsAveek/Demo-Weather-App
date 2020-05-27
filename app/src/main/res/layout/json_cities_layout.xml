@@ -8,10 +8,10 @@
 
         <variable
             name="citiesViewModel"
-            type="com.example.carsomeweatherapp.ui.cities.CitiesListViewModel" />
+            type="com.example.demoweatherapp.ui.cities.CitiesListViewModel" />
         <variable
             name="jsonCitiesViewModel"
-            type="com.example.carsomeweatherapp.ui.home.cities.JSONCitiesViewModel" />
+            type="com.example.demoweatherapp.ui.home.cities.JSONCitiesViewModel" />
         <variable
             name="data"
             type="String"/>

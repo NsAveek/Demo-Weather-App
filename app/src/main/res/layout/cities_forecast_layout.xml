@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.carsomeweatherapp.ui.home.cities.WeatherForecastViewModel" />
+            type="com.example.demoweatherapp.ui.home.cities.WeatherForecastViewModel" />
     </data>
 
 
