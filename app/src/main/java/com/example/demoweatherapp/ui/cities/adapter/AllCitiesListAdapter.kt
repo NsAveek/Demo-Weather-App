@@ -4,17 +4,20 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoweatherapp.R
 import com.example.demoweatherapp.databinding.CitiesForecastLayoutBinding
 import com.example.demoweatherapp.databinding.JsonCitiesLayoutBinding
 import com.example.demoweatherapp.databinding.LoaderFooterTransparentGreyBinding
 import com.example.demoweatherapp.ui.cities.CitiesListViewModel
+import com.example.demoweatherapp.ui.home.MainActivity
+import com.example.demoweatherapp.ui.home.cities.WeatherForecastViewModel
 import com.example.demoweatherapp.viewModel.ViewModelProviderFactory
 import javax.inject.Inject
 
 
-class AllCitiesListAdapter @Inject constructor(val context : Context, viewModelProviderFactory: ViewModelProviderFactory) : RecyclerView.Adapter<AllCitiesListAdapter.BottomSheetVH>() {
+class AllCitiesListAdapter @Inject constructor(val context : Context) : RecyclerView.Adapter<AllCitiesListAdapter.BottomSheetVH>() {
 
     private val items : ArrayList<String> = ArrayList()
 

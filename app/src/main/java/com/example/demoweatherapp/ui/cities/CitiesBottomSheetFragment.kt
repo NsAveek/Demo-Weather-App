@@ -15,6 +15,7 @@ import com.example.demoweatherapp.R
 import com.example.demoweatherapp.core.events.ListenToDismissFragmentCall
 import com.example.demoweatherapp.databinding.CitiesBottomSheetFragmentBinding
 import com.example.demoweatherapp.ui.cities.adapter.AllCitiesListAdapter
+import com.example.demoweatherapp.ui.home.MainActivity
 import com.example.demoweatherapp.viewModel.ViewModelProviderFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.android.support.AndroidSupportInjection
@@ -88,7 +89,7 @@ class CitiesBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun initAllCitiesListAdapter(v : View) {
         allCitiesistAdapter =
-            AllCitiesListAdapter(v.context, viewModelProviderFactory)
+            AllCitiesListAdapter(v.context)
     }
 
     private fun initAllCitiesRecyclerView(v: View) {

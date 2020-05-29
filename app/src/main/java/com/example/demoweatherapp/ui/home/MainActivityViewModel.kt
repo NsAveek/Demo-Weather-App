@@ -1,6 +1,7 @@
 package com.example.demoweatherapp.ui.home
 
 import android.app.Application
+import android.graphics.drawable.Drawable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,6 +28,9 @@ class MainActivityViewModel @Inject constructor(
     /**
      * Live Data getWeatherDataClick event to trigger getting weather data by city name
      **/
+
+    val iconDrawable : ObservableField<Drawable> = ObservableField()
+
     val getWeatherDataClick = MutableLiveData<CustomEventLiveData<Boolean>>()
 
     val getLocationRequestClick = MutableLiveData<CustomEventLiveData<Boolean>>()

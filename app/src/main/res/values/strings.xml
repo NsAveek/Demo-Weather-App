@@ -47,4 +47,8 @@
     </string-array>
 
     <string name="clouds">Clouds</string>
+    <string name="rain">Rain</string>
+    <string name="thunderstorm">Thunderstorm</string>
+    <string name="mist">Mist</string>
+    <string name="clear">Clear</string>
 </resources>

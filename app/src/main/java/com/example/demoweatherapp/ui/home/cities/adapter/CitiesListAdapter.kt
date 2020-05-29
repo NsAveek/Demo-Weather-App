@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoweatherapp.R
 import com.example.demoweatherapp.databinding.CitiesLayoutBinding
@@ -12,6 +13,8 @@ import com.example.demoweatherapp.databinding.LoaderFooterTransparentGreyBinding
 import com.example.demoweatherapp.db.WeatherModel
 import com.example.demoweatherapp.ui.home.MainActivity
 import com.example.demoweatherapp.ui.home.cities.CitiesViewModel
+import com.example.demoweatherapp.ui.home.cities.WeatherForecastViewModel
+import com.example.demoweatherapp.viewModel.ViewModelProviderFactory
 
 /** Represents types of views to load inside recycler view
  * @author Aveek
@@ -28,12 +31,13 @@ const val REGULAR_TYPE = 1
 const val LOADING_TYPE = 2
 const val DOWNLOAD_MORE_DATA = 3
 
-class CitiesListAdapter(val context: MainActivity) :
+class CitiesListAdapter(val context: MainActivity, viewModelProviderFactory: ViewModelProviderFactory) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val items: ArrayList<WeatherModel> = ArrayList()
 
-    private val viewModel: CitiesViewModel = CitiesViewModel()
+    private val viewModel: CitiesViewModel = ViewModelProviders.of(context, viewModelProviderFactory)
+        .get(CitiesViewModel::class.java)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
