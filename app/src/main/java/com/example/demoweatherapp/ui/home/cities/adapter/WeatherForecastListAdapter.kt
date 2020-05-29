@@ -5,13 +5,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoweatherapp.R
 import com.example.demoweatherapp.databinding.CitiesForecastLayoutBinding
 import com.example.demoweatherapp.databinding.LoaderFooterTransparentGreyBinding
 import com.example.demoweatherapp.model.forecast.ForecastCustomizedModel
 import com.example.demoweatherapp.ui.home.MainActivity
+import com.example.demoweatherapp.ui.home.MainActivityViewModel
 import com.example.demoweatherapp.ui.home.cities.WeatherForecastViewModel
+import com.example.demoweatherapp.utils.getWeatherIcon
 import com.example.demoweatherapp.viewModel.ViewModelProviderFactory
 import javax.inject.Inject
 
@@ -20,7 +23,8 @@ class WeatherForecastListAdapter @Inject constructor(val context : MainActivity,
 
     private val items : ArrayList<ForecastCustomizedModel> = ArrayList()
 
-    private val viewModel : WeatherForecastViewModel = WeatherForecastViewModel()
+    private val viewModel : WeatherForecastViewModel = ViewModelProviders.of(context, viewModelProviderFactory)
+        .get(WeatherForecastViewModel::class.java)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
@@ -134,23 +138,23 @@ class WeatherForecastListAdapter @Inject constructor(val context : MainActivity,
                     when(data.weatherType){
                         context.getString(R.string.clouds) -> {
                             backgroundColor.set(ContextCompat.getColor(context,R.color.lightBlue))
-                            iconDrawable.set(ContextCompat.getDrawable(context,R.drawable.ic_cloudy))
+                            iconDrawable.set(getWeatherIcon(context,context.getString(R.string.clouds)))
                         }
-                        "Rain" ->{
+                        context.getString(R.string.rain) ->{
                             backgroundColor.set(ContextCompat.getColor(context,R.color.lightYellow))
-                            iconDrawable.set(ContextCompat.getDrawable(context,R.drawable.ic_rain))
+                            iconDrawable.set(getWeatherIcon(context,context.getString(R.string.rain)))
                         }
-                        "Clear" ->{
+                        context.getString(R.string.clear) ->{
                             backgroundColor.set(ContextCompat.getColor(context,R.color.lightSlateGray))
-                            iconDrawable.set(ContextCompat.getDrawable(context,R.drawable.ic_sunny))
+                            iconDrawable.set(getWeatherIcon(context,context.getString(R.string.clear)))
                         }
-                        "Thunderstorm" ->{
+                        context.getString(R.string.thunderstorm) ->{
                             backgroundColor.set(ContextCompat.getColor(context,R.color.lightSlateGray))
-                            iconDrawable.set(ContextCompat.getDrawable(context,R.drawable.ic_thunderstorm))
+                            iconDrawable.set(getWeatherIcon(context,context.getString(R.string.thunderstorm)))
                         }
                         else -> {
                             backgroundColor.set(ContextCompat.getColor(context,R.color.indianRed))
-                            iconDrawable.set(ContextCompat.getDrawable(context,R.drawable.ic_sunny))
+                            iconDrawable.set(getWeatherIcon(context,""))
                         }
                     }
                 }

@@ -3,6 +3,7 @@ package com.example.demoweatherapp.ui.home.cities.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoweatherapp.R
 import com.example.demoweatherapp.databinding.CitiesForecastLayoutBinding
@@ -10,6 +11,7 @@ import com.example.demoweatherapp.databinding.JsonCitiesLayoutBinding
 import com.example.demoweatherapp.databinding.LoaderFooterTransparentGreyBinding
 import com.example.demoweatherapp.ui.home.MainActivity
 import com.example.demoweatherapp.ui.home.cities.JSONCitiesViewModel
+import com.example.demoweatherapp.ui.home.cities.WeatherForecastViewModel
 import com.example.demoweatherapp.viewModel.ViewModelProviderFactory
 import javax.inject.Inject
 
@@ -18,7 +20,8 @@ class JsonCitiesListAdapter @Inject constructor(val context : MainActivity, view
 
     private val items : ArrayList<String> = ArrayList()
 
-    private val viewModel : JSONCitiesViewModel = JSONCitiesViewModel()
+    private val viewModel : JSONCitiesViewModel = ViewModelProviders.of(context, viewModelProviderFactory)
+        .get(JSONCitiesViewModel::class.java)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BottomSheetVH{
         return BottomSheetVH(DataBindingUtil.inflate(LayoutInflater.from(parent?.context),

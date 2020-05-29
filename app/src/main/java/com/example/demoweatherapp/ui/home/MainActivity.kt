@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
@@ -13,6 +14,7 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -34,6 +36,7 @@ import com.example.demoweatherapp.ui.cities.CitiesBottomSheetFragment
 import com.example.demoweatherapp.ui.home.cities.adapter.CitiesListAdapter
 import com.example.demoweatherapp.ui.home.cities.adapter.WeatherForecastListAdapter
 import com.example.demoweatherapp.utils.EnumDataState
+import com.example.demoweatherapp.utils.getWeatherIcon
 import com.example.demoweatherapp.viewModel.ViewModelProviderFactory
 import com.google.android.gms.location.*
 import dagger.android.AndroidInjector
@@ -248,7 +251,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
     }
 
     private fun initCitiesAdapter() {
-        citiesListAdapter = CitiesListAdapter(this)
+        citiesListAdapter = CitiesListAdapter(this, viewModelProviderFactory)
     }
 
     private fun initWeatherForecastListAdapter() {
@@ -306,6 +309,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                                                 this@MainActivity.getString(R.string.degree_in_celcius),
                                                 this.main.temp
                                             )
+                                            iconDrawable.set(getWeatherIcon(this@MainActivity,this.weather[0].main))
                                         }
                                     } else if (pair.first == EnumDataState.ERROR.type) {
                                         with(pair.second as Throwable) {
@@ -427,6 +431,8 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                                                 this@MainActivity.getString(R.string.degree_in_celcius),
                                                 this.main.temp
                                             )
+                                            iconDrawable.set(getWeatherIcon(this@MainActivity,this.weather[0].main))
+
                                         }
                                     } else if (pair.first == EnumDataState.ERROR.type) {
                                         with(pair.second as Throwable) {
@@ -461,6 +467,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                                     this@MainActivity.getString(R.string.degree_in_celcius),
                                     this.main.temp
                                 )
+                                iconDrawable.set(getWeatherIcon(this@MainActivity,this.weather[0].main))
                             }
                         } else if (pair.first == EnumDataState.ERROR.type) {
                             with(pair.second as Throwable) {
