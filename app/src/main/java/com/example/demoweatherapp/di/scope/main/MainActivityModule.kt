@@ -5,5 +5,4 @@ import javax.inject.Inject
 
 @Module
 class  MainActivityModule @Inject constructor(){
-
 }
