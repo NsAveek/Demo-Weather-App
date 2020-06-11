@@ -20,7 +20,6 @@ import dagger.android.ContributesAndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
-
 @Singleton
 @Component(
     modules = [
@@ -30,21 +29,17 @@ import javax.inject.Singleton
         ViewModelFactoryModule::class]
 )
 interface AppComponent : AndroidInjector<BaseApp> {
-
     @Component.Builder
     interface Builder {
         @BindsInstance // Binds a particular instance of the object through the component of the time of construction
         fun application(application: Application): Builder // This makes the application available through all modules available
-
         fun build(): AppComponent
     }
-
     override fun inject(app: BaseApp)
 }
 
 @Module
 internal abstract class LocalDependencyBuilder {
-
     @ContributesAndroidInjector(
         modules = [MainActivityModule::class,
             MainActivityVMModule::class,

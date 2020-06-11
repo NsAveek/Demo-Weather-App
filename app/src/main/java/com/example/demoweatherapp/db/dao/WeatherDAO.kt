@@ -1,7 +1,7 @@
 package com.example.demoweatherapp.db.dao
 import androidx.room.Dao
 import androidx.room.Query
-import com.example.demoweatherapp.db.WeatherModel
+import com.example.demoweatherapp.db.entity.WeatherModel
 
 import io.reactivex.Single
 

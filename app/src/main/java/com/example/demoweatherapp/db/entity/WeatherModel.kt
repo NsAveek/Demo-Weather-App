@@ -1,4 +1,4 @@
-package com.example.demoweatherapp.db
+package com.example.demoweatherapp.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

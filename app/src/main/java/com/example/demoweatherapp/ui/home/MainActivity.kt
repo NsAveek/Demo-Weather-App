@@ -28,7 +28,7 @@ import com.example.demoweatherapp.R
 import com.example.demoweatherapp.core.events.ListenToCityAdapterItemCall
 import com.example.demoweatherapp.core.events.ListenToJSONCityAdapterItemCall
 import com.example.demoweatherapp.databinding.ActivityMainBinding
-import com.example.demoweatherapp.db.WeatherModel
+import com.example.demoweatherapp.db.entity.WeatherModel
 import com.example.demoweatherapp.model.WeatherData
 import com.example.demoweatherapp.model.forecast.ForecastData
 import com.example.demoweatherapp.network.NetworkActivity

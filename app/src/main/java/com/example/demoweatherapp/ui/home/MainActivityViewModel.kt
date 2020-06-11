@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.demoweatherapp.R
 import com.example.demoweatherapp.core.repository.RemoteDataSourceRepository
-import com.example.demoweatherapp.db.WeatherModel
+import com.example.demoweatherapp.db.entity.WeatherModel
 import com.example.demoweatherapp.model.forecast.ForecastCustomizedModel
 import com.example.demoweatherapp.model.forecast.ListWeatherInfo
 import com.example.demoweatherapp.utils.CustomEventLiveData

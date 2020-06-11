@@ -143,6 +143,7 @@ class CitiesListAdapter(val context: MainActivity, viewModelProviderFactory: Vie
      * @version 1
      * @since Version 1.0
      */
+
     class RegularTransactionViewHolder(
         val binding: CitiesLayoutBinding,
         val context: MainActivity
