@@ -1,8 +1,8 @@
 package com.example.demoweatherapp.core.repository
 
 import com.example.demoweatherapp.core.network.AppService
-import com.example.demoweatherapp.db.WeatherModel
 import com.example.demoweatherapp.db.dao.WeatherDAO
+import com.example.demoweatherapp.db.entity.WeatherModel
 import com.example.demoweatherapp.model.WeatherData
 import com.example.demoweatherapp.model.forecast.ForecastData
 import com.example.demoweatherapp.utils.appID

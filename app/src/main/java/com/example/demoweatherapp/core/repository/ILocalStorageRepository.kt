@@ -1,6 +1,6 @@
 package com.example.demoweatherapp.core.repository
 
-import com.example.demoweatherapp.db.WeatherModel
+import com.example.demoweatherapp.db.entity.WeatherModel
 import io.reactivex.Single
 
 interface ILocalStorageRepository {
