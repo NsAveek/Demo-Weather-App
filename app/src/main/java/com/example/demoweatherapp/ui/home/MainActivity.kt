@@ -228,7 +228,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
                 }
             }
         })
-//        compositeDisposable.add(disposable)
     }
 
     private fun insertDataToDatabase(data: String) {

@@ -15,7 +15,7 @@ buildscript {
 
         multidexVersion = '1.0.3'
 
-        roomVersion = '1.1.1'
+        roomVersion = '2.2.5'
         glideVersion = '4.9.0'
     }
     repositories {

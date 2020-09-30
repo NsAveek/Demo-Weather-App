@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.demoweatherapp.R
 import com.example.demoweatherapp.databinding.CitiesLayoutBinding
 import com.example.demoweatherapp.databinding.LoaderFooterTransparentGreyBinding
-import com.example.demoweatherapp.db.WeatherModel
+import com.example.demoweatherapp.db.entity.WeatherModel
+
 import com.example.demoweatherapp.ui.home.MainActivity
 import com.example.demoweatherapp.ui.home.cities.CitiesViewModel
 import com.example.demoweatherapp.ui.home.cities.WeatherForecastViewModel
