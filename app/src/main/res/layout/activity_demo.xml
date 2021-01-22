@@ -14,18 +14,18 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.MainActivity">
 
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        android:id="@+id/calendar_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2"
-        app:layout_constraintVertical_bias="0.0"
-        app:mcv_showOtherDates="all"
-        app:mcv_selectionMode="range"
-        app:mcv_selectionColor="@color/featured"/>
+<!--    <com.prolificinteractive.materialcalendarview.MaterialCalendarView-->
+<!--        android:id="@+id/calendar_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2"-->
+<!--        app:layout_constraintVertical_bias="0.0"-->
+<!--        app:mcv_showOtherDates="all"-->
+<!--        app:mcv_selectionMode="range"-->
+<!--        app:mcv_selectionColor="@color/featured"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
