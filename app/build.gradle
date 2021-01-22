@@ -5,7 +5,7 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "com.example.demoweatherapp"
@@ -90,6 +90,7 @@ dependencies {
     implementation 'androidx.preference:preference:1.1.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.material:material:1.0.0'
-
+    implementation "com.github.prolificinteractive:material-calendarview:2.0.1"
+    implementation 'com.github.psinetron:slycalendarview:0.0.9'
 
 }
