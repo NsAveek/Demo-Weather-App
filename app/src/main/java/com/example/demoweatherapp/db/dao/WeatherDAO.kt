@@ -1,4 +1,5 @@
 package com.example.demoweatherapp.db.dao
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import com.example.demoweatherapp.db.entity.WeatherModel
@@ -9,5 +10,5 @@ import io.reactivex.Single
 interface WeatherDAO : BaseDAO<WeatherModel> {
 
     @Query("SELECT * FROM `weathermodel`")
-    fun getAllData() : Single<List<WeatherModel>>
+    fun getAllData() : LiveData<List<WeatherModel>>
 }

@@ -8,7 +8,7 @@ import com.example.demoweatherapp.di.AppInjector
 
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 //class BaseApp : DaggerApplication(){
@@ -16,15 +16,14 @@ import javax.inject.Inject
 //        return DaggerAppComponent.builder().application(this).build()
 //    }
 //}
-class BaseApp : MultiDexApplication() , HasActivityInjector{
+class BaseApp : MultiDexApplication(), HasAndroidInjector{
 
     @Inject
-    lateinit var dispatchingActivityInjector : DispatchingAndroidInjector<Activity>
+    lateinit var dispatchingActivityInjector : DispatchingAndroidInjector<Any>
     override fun onCreate() {
         super.onCreate()
         AppInjector.init(this)
     }
-    override fun activityInjector(): AndroidInjector<Activity> {
-        return  dispatchingActivityInjector
-    }
+
+    override fun androidInjector(): AndroidInjector<Any> = dispatchingActivityInjector
 }

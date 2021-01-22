@@ -3,6 +3,7 @@ package com.example.demoweatherapp.ui.home
 import android.app.Application
 import android.graphics.drawable.Drawable
 import androidx.databinding.ObservableField
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.demoweatherapp.R
@@ -189,16 +190,7 @@ class MainActivityViewModel @Inject constructor(
         remoteDataSourceRepository.insertWeatherDataIntoLocalStorage(model)
     }
 
-    fun getAllLocallyStoredWeatherData(): MutableLiveData<PairLocal<String, Any>> {
-        val data = MutableLiveData<PairLocal<String, Any>>()
-        remoteDataSourceRepository.getAllLocallyStoredWeatherData()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                data.value = PairLocal(EnumDataState.SUCCESS.type, it)
-            }, {
-                data.value = PairLocal(EnumDataState.ERROR.type, it)
-            })
-        return data
+    fun getAllLocallyStoredWeatherData(): LiveData<List<WeatherModel>> {
+        return remoteDataSourceRepository.getAllLocallyStoredWeatherData()
     }
 }

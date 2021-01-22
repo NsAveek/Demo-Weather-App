@@ -6,7 +6,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
@@ -14,7 +13,6 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -41,7 +39,7 @@ import com.example.demoweatherapp.viewModel.ViewModelProviderFactory
 import com.google.android.gms.location.*
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
+import dagger.android.HasAndroidInjector
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -59,13 +57,13 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
-class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInjector {
+class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
 
     @Inject
     lateinit var viewModelProviderFactory: ViewModelProviderFactory
 
     @Inject
-    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
     private lateinit var viewModel: MainActivityViewModel
 
@@ -218,15 +216,10 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
     }
 
     private fun loadInitialDataToCitiesAdapter() {
-        citiesListAdapter.clearData()
+
         viewModel.getAllLocallyStoredWeatherData().observe(this, Observer {
-            it?.let {pair ->
-                if(pair.first == EnumDataState.SUCCESS.type){
-                    citiesListAdapter.setData(pair.second as List<WeatherModel>)
-                }else{
-                    errorCallback(pair.second as Throwable)
-                }
-            }
+            citiesListAdapter.clearData()
+            citiesListAdapter.setData(it)
         })
     }
 
@@ -390,10 +383,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
         super.onDestroy()
         mLifecycleRegistry.markState(Lifecycle.State.DESTROYED)
         compositeDisposable.dispose()
-    }
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return fragmentDispatchingAndroidInjector
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -593,4 +582,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasSupportFragmentInject
             }
         }
     }
+
+    override fun androidInjector(): AndroidInjector<Any> = androidInjector
 }

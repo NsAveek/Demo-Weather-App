@@ -1,5 +1,6 @@
 package com.example.demoweatherapp.core.repository
 
+import androidx.lifecycle.LiveData
 import com.example.demoweatherapp.core.network.AppService
 import com.example.demoweatherapp.db.dao.WeatherDAO
 import com.example.demoweatherapp.db.entity.WeatherModel
@@ -38,7 +39,7 @@ class RemoteDataSourceRepository @Inject constructor(
         return appService.getWeatherForecastByLatLong(latitude, longitude, appID, baseUnit)
     }
 
-    override fun getAllLocallyStoredWeatherData(): Single<List<WeatherModel>> {
+    override fun getAllLocallyStoredWeatherData(): LiveData<List<WeatherModel>> {
         return weatherDAO.getAllData()
     }
 
