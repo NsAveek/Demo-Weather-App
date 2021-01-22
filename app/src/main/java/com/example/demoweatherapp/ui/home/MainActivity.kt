@@ -223,6 +223,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
         })
     }
 
+
     private fun insertDataToDatabase(data: String) {
         compositeDisposable.add(
             Completable.fromAction {
