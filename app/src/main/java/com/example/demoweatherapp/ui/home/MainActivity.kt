@@ -97,13 +97,13 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
 
         compositeDisposable = CompositeDisposable()
 
-        jsonString = loadCitiesFromJson("cities.json")
-
-        try {
-            jsonCities = JSONObject(jsonString)
-        } catch (e: Exception) {
-
-        }
+//        jsonString = loadCitiesFromJson("cities.json")
+//
+//        try {
+//            jsonCities = JSONObject(jsonString)
+//        } catch (e: Exception) {
+//
+//        }
 
         locationHandler()
 
@@ -184,6 +184,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
             this.layoutManager = this@MainActivity.weatherForecastListLayoutManager
             this.adapter = this@MainActivity.weatherForecastListAdapter
         }.also {
+            // TODO : Implement Paging 3
             it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
