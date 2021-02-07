@@ -32,9 +32,25 @@ class MainActivityViewModel @Inject constructor(
 
     val iconDrawable : ObservableField<Drawable> = ObservableField()
 
-    val getWeatherDataClick = MutableLiveData<CustomEventLiveData<Boolean>>()
+    private val weatherDataClick = MutableLiveData<PairLocal<String, Any>>()
+    val weatherData : LiveData<PairLocal<String, Any>>
+    get() = weatherDataClick
 
-    val getLocationRequestClick = MutableLiveData<CustomEventLiveData<Boolean>>()
+    private val weatherForecastDataClick = MutableLiveData<PairLocal<String, Any>>()
+    val weatherForecastData : LiveData<PairLocal<String, Any>>
+    get() = weatherForecastDataClick
+
+    private val weatherDataByLatLongClick = MutableLiveData<PairLocal<String, Any>>()
+    val weatherByLatLongData : LiveData<PairLocal<String, Any>>
+    get() = weatherDataByLatLongClick
+
+    private val weatherForecastDataByLatLongClick = MutableLiveData<PairLocal<String, Any>>()
+    val weatherForecastByLatLongData : LiveData<PairLocal<String, Any>>
+    get() = weatherForecastDataByLatLongClick
+
+    private val locationRequestClick = MutableLiveData<Boolean>()
+    val locationRequestData : LiveData<Boolean>
+    get() = locationRequestClick
 
     val getShowAllCitiesClick = MutableLiveData<CustomEventLiveData<Boolean>>()
 
@@ -48,13 +64,20 @@ class MainActivityViewModel @Inject constructor(
 
     val weatherCondition = MutableLiveData<String>()
 
+    init {
+        cityName.set("Kuala Lumpur")
+        getWeatherData()
+        getWeatherForecastData()
+    }
+
     /**
      * Observe weather data click event and triggers getWeatherDataClick event
      * @param none
      * @return none
      **/
     fun openWeatherData() {
-        getWeatherDataClick.value = CustomEventLiveData(true)
+        getWeatherData()
+        getWeatherForecastData()
     }
 
     fun openLocationRequest() {
@@ -99,69 +122,62 @@ class MainActivityViewModel @Inject constructor(
         return listOfForecastAdapterLiveData
     }
 
-    fun getWeatherData(): MutableLiveData<PairLocal<String, Any>> {
-        val data = MutableLiveData<PairLocal<String, Any>>()
+    // region weather by city
+    private fun getWeatherData() {
         cityName.get()?.let {
             remoteDataSourceRepository.getWeatherDataByCityName(it)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    data.value = PairLocal(EnumDataState.SUCCESS.type, it)
+                    weatherDataClick.postValue(PairLocal(EnumDataState.SUCCESS.type, it))
                 }, {
-                    data.value = PairLocal(EnumDataState.ERROR.type, it)
+                    weatherDataClick.postValue(PairLocal(EnumDataState.SUCCESS.type, it))
                 })
         }
-        return data
     }
 
-    fun getWeatherForecastData(): MutableLiveData<PairLocal<String, Any>> {
-        val data = MutableLiveData<PairLocal<String, Any>>()
+    private fun getWeatherForecastData() {
         cityName.get()?.let {
             remoteDataSourceRepository.getWeatherForecastDataByCityName(it)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    data.value = PairLocal(EnumDataState.SUCCESS.type, it)
+                    weatherForecastDataClick.postValue(PairLocal(EnumDataState.SUCCESS.type, it))
                 }, {
-                    data.value = PairLocal(EnumDataState.ERROR.type, it)
+                    weatherForecastDataClick.postValue(PairLocal(EnumDataState.ERROR.type, it))
                 })
         }
-        return data
     }
 
-    fun getWeatherDataByLatLong(): MutableLiveData<PairLocal<String, Any>> {
-        val data = MutableLiveData<PairLocal<String, Any>>()
-        latitude!!.get()?.let {
-            longitude.get()?.let { it1 ->
-                remoteDataSourceRepository.getWeatherDataByLatLong(it, it1)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        data.value = PairLocal(EnumDataState.SUCCESS.type, it)
-                    }, {
-                        data.value = PairLocal(EnumDataState.ERROR.type, it)
-                    })
-            }
-        }
-        return data
+    // endregion
+
+    // region weather by latlong
+
+    fun getWeatherDataByLatLong() {
+        remoteDataSourceRepository.getWeatherDataByLatLong(latitude.get()!!, longitude.get()!!)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                weatherDataByLatLongClick.postValue(PairLocal(EnumDataState.SUCCESS.type, it))
+            }, {
+                weatherDataByLatLongClick.postValue(PairLocal(EnumDataState.ERROR.type, it))
+            })
     }
 
-    fun getWeatherForecastDataByLatLong(): MutableLiveData<PairLocal<String, Any>> {
-        val data = MutableLiveData<PairLocal<String, Any>>()
-        latitude.get()?.let {
-            longitude.get()?.let { it1 ->
-                remoteDataSourceRepository.getWeatherForecastDataByLatLong(it, it1)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        data.value = PairLocal(EnumDataState.SUCCESS.type, it)
-                    }, {
-                        data.value = PairLocal(EnumDataState.ERROR.type, it)
-                    })
-            }
-        }
-        return data
+    fun getWeatherForecastDataByLatLong(){
+        remoteDataSourceRepository.getWeatherForecastDataByLatLong(latitude.get()!!, longitude.get()!!)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                weatherForecastDataByLatLongClick.postValue(PairLocal(EnumDataState.SUCCESS.type, it))
+            }, {
+                weatherForecastDataByLatLongClick.postValue(PairLocal(EnumDataState.ERROR.type, it))
+            })
     }
+
+    // endregion
+
+    // region database CRUD
 
     fun insertInitialDataInsideDB() {
         with(remoteDataSourceRepository) {

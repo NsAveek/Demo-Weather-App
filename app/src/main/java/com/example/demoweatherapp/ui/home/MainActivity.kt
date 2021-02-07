@@ -34,6 +34,7 @@ import com.example.demoweatherapp.ui.cities.CitiesBottomSheetFragment
 import com.example.demoweatherapp.ui.home.cities.adapter.CitiesListAdapter
 import com.example.demoweatherapp.ui.home.cities.adapter.WeatherForecastListAdapter
 import com.example.demoweatherapp.utils.EnumDataState
+import com.example.demoweatherapp.utils.PairLocal
 import com.example.demoweatherapp.utils.getWeatherIcon
 import com.example.demoweatherapp.viewModel.ViewModelProviderFactory
 import com.google.android.gms.location.*
@@ -81,9 +82,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
     private lateinit var weatherForecastRecyclerView: RecyclerView
     private lateinit var weatherForecastListLayoutManager: LinearLayoutManager
 
-    private lateinit var jsonString: String
-    private lateinit var jsonCities: JSONObject
-
     private lateinit var permissions: ArrayList<String>
     private lateinit var mFusedLocationClient : FusedLocationProviderClient
 
@@ -97,16 +95,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
 
         compositeDisposable = CompositeDisposable()
 
-//        jsonString = loadCitiesFromJson("cities.json")
-//
-//        try {
-//            jsonCities = JSONObject(jsonString)
-//        } catch (e: Exception) {
-//
-//        }
-
         locationHandler()
-
 
         viewModel = ViewModelProviders.of(this, viewModelProviderFactory)
             .get(MainActivityViewModel::class.java)
@@ -140,11 +129,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
         initWeatherForecastRecyclerView()
 
         loadInitialDataToCitiesAdapter()
-
-        with(viewModel) {
-            this.cityName.set(getString(R.string.kuala_lumpur))
-            this.openWeatherData() // initiate data load
-        }
     }
 
     private fun locationHandler() {
@@ -154,29 +138,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
 //        getLastLocation()
-    }
-
-    private fun loadCitiesFromJson(textFileName: String): String {
-        var strJSON: String
-        var buf: StringBuilder = StringBuilder()
-        val json: InputStream
-        try {
-            json = this.assets.open(textFileName)
-
-            val inData = BufferedReader(InputStreamReader(json, "UTF-8"))
-
-            while (inData.readLine() != null) {
-                strJSON = inData.readLine()
-
-                buf.append(strJSON)
-            }
-            inData.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        return buf.toString()
-
     }
 
     private fun initWeatherForecastRecyclerView() {
@@ -223,7 +184,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
             citiesListAdapter.setData(it)
         })
     }
-
 
     private fun insertDataToDatabase(data: String) {
         compositeDisposable.add(
@@ -284,59 +244,29 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
                         show(supportFragmentManager,null)
                     }
                 })
-                getLocationRequestClick.observe(this@MainActivity, Observer { locationRequest ->
-                    locationRequest.getContentIfNotHandled()?.let {
-                        if (it) {
-                            getLocation()
-                        }
-                    }
+                locationRequestData.observe(this@MainActivity, Observer { locationRequest ->
+                    getLocation()
                 })
-                getWeatherDataClick.observe(this@MainActivity, Observer { weatherLiveData ->
-                    weatherLiveData.getContentIfNotHandled()?.let {
-                        if (isNetworkAvailable()) {
-                            getWeatherData().observe(this@MainActivity, Observer {
-                                it?.let { pair ->
-                                    if (pair.first == EnumDataState.SUCCESS.type) {
-                                        with(pair.second as WeatherData) {
-                                            weatherCondition.value = this.weather[0].main
-                                            temparatureInDegreeCelcius.value = String.format(
-                                                this@MainActivity.getString(R.string.degree_in_celcius),
-                                                this.main.temp
-                                            )
-                                            iconDrawable.set(getWeatherIcon(this@MainActivity,this.weather[0].main))
-                                        }
-                                    } else if (pair.first == EnumDataState.ERROR.type) {
-                                        with(pair.second as Throwable) {
-                                            errorCallback(this)
-                                        }
-                                    }
-                                }
-                            })
-                            getWeatherForecastData().observe(this@MainActivity, Observer {
-                                it?.let { pair ->
-                                    if (pair.first == EnumDataState.SUCCESS.type) {
-                                        with(pair.second as ForecastData) {
-                                            weatherForecastListAdapter.clearData()
-                                            prepareForecastAdapter(this)
-//                                            weatherForecastListAdapter.setData(
-//                                                prepareForecastAdapter(this)
-//                                            )
-                                        }
-                                    } else {
-                                        with(pair.second as Throwable) {
-                                            errorCallback(this)
-                                        }
-                                    }
-                                }
-                            })
-                        } else {
-                            networkNotAvailable()
-                        }
-                    }
+
+                weatherData.observe(this@MainActivity, Observer { weatherLiveData ->
+                    generateWeatherInformation(this,weatherLiveData)
+                })
+
+                weatherForecastData.observe(this@MainActivity, Observer {
+                    generateForecastAdapter(it)
+                })
+
+                weatherByLatLongData.observe(this@MainActivity, Observer {
+                    generateWeatherInformation(this,it)
+                })
+                weatherForecastByLatLongData.observe(this@MainActivity, Observer {
+                    generateForecastAdapter(it)
                 })
             }
         }
     }
+
+
 
     private fun prepareForecastAdapter(forecastData: ForecastData) {
         viewModel.prepareForecastAdapterData(forecastData.list, forecastData.city.name).observe(this, Observer {
@@ -404,88 +334,53 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
         insertDataToDatabase(data = event.getMessage())
     }
 
-    fun processRequest(binding: ActivityMainBinding, cityNameData: String) {
-
-        binding.viewModel?.let { localViewModel ->
-            with(localViewModel) {
-                openWeatherData()
-                getWeatherDataClick.observe(this@MainActivity, Observer { weatherLiveData ->
-                    weatherLiveData.getContentIfNotHandled()?.let {
-                        if (isNetworkAvailable()) {
-                            getWeatherData().observe(this@MainActivity, Observer {
-                                it?.let { pair ->
-                                    if (pair.first == EnumDataState.SUCCESS.type) {
-                                        with(pair.second as WeatherData) {
-                                            weatherCondition.value = this.weather[0].main
-                                            temparatureInDegreeCelcius.value = String.format(
-                                                this@MainActivity.getString(R.string.degree_in_celcius),
-                                                this.main.temp
-                                            )
-                                            iconDrawable.set(getWeatherIcon(this@MainActivity,this.weather[0].main))
-
-                                        }
-                                    } else if (pair.first == EnumDataState.ERROR.type) {
-                                        with(pair.second as Throwable) {
-                                            errorCallback(this)
-                                        }
-                                    }
-                                }
-                            })
-                        } else {
-                            networkNotAvailable()
-                        }
-                    }
-                })
-            }
-        }
-    }
-
     private fun getWeatherDataByLocation(latitude : String, longitude : String){
         if (isNetworkAvailable()) {
             with(viewModel){
                 this.latitude.set(latitude)
                 this.longitude.set(longitude)
-                getWeatherDataByLatLong().observe(this@MainActivity, Observer {
-                    it?.let { pair ->
-                        if (pair.first == EnumDataState.SUCCESS.type) {
-                            with(pair.second as WeatherData) {
-
-                                cityName.set(this.name)
-
-                                weatherCondition.value = this.weather[0].main
-                                temparatureInDegreeCelcius.value = String.format(
-                                    this@MainActivity.getString(R.string.degree_in_celcius),
-                                    this.main.temp
-                                )
-                                iconDrawable.set(getWeatherIcon(this@MainActivity,this.weather[0].main))
-                            }
-                        } else if (pair.first == EnumDataState.ERROR.type) {
-                            with(pair.second as Throwable) {
-                                errorCallback(this)
-                            }
-                        }
-                    }
-                })
-                getWeatherForecastDataByLatLong().observe(this@MainActivity, Observer {
-                    it?.let { pair ->
-                        if (pair.first == EnumDataState.SUCCESS.type) {
-                            with(pair.second as ForecastData) {
-                                weatherForecastListAdapter.clearData()
-                                prepareForecastAdapter(this)
-//                                weatherForecastListAdapter.setData(
-//                                    prepareForecastAdapter(this)
-//                                )
-                            }
-                        } else {
-                            with(pair.second as Throwable) {
-                                errorCallback(this)
-                            }
-                        }
-                    }
-                })
+                getWeatherDataByLatLong()
+                getWeatherForecastDataByLatLong()
             }
         } else {
             networkNotAvailable()
+        }
+    }
+
+    private fun generateWeatherInformation(
+        viewModel : MainActivityViewModel,
+        weatherLiveData: PairLocal<String, Any>
+    ) {
+        with(viewModel){
+            if (weatherLiveData.first == EnumDataState.SUCCESS.type) {
+                with(weatherLiveData.second as WeatherData) {
+                    weatherCondition.value = this.weather[0].main
+                    temparatureInDegreeCelcius.value = String.format(
+                        this@MainActivity.getString(R.string.degree_in_celcius),
+                        this.main.temp
+                    )
+                    iconDrawable.set(getWeatherIcon(this@MainActivity, this.weather[0].main))
+                }
+            } else if (weatherLiveData.first == EnumDataState.ERROR.type) {
+                with(weatherLiveData.second as Throwable) {
+                    errorCallback(this)
+                }
+            }
+        }
+    }
+
+    private fun generateForecastAdapter(it: PairLocal<String, Any>) {
+        it?.let { pair ->
+            if (pair.first == EnumDataState.SUCCESS.type) {
+                with(pair.second as ForecastData) {
+                    weatherForecastListAdapter.clearData()
+                    prepareForecastAdapter(this)
+                }
+            } else {
+                with(pair.second as Throwable) {
+                    errorCallback(this)
+                }
+            }
         }
     }
 
