@@ -240,12 +240,18 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
         binding.viewModel?.let { localViewModel ->
             with(localViewModel) {
                 getShowAllCitiesClick.observe(this@MainActivity, Observer { allCities ->
-                    CitiesBottomSheetFragment.getCitiesBottomSheetFragment().apply {
-                        show(supportFragmentManager,null)
+                    allCities.getContentIfNotHandled()?.let{
+                        CitiesBottomSheetFragment.getCitiesBottomSheetFragment().apply {
+                            show(supportFragmentManager,null)
+                        }
                     }
                 })
-                locationRequestData.observe(this@MainActivity, Observer { locationRequest ->
-                    getLocation()
+                getLocationRequestClick.observe(this@MainActivity, Observer { locationRequest ->
+                    locationRequest.getContentIfNotHandled()?.let {
+                        if (it) {
+                            getLocation()
+                        }
+                    }
                 })
 
                 weatherData.observe(this@MainActivity, Observer { weatherLiveData ->

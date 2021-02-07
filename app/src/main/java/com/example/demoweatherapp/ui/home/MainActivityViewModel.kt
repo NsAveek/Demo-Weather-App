@@ -32,6 +32,20 @@ class MainActivityViewModel @Inject constructor(
 
     val iconDrawable : ObservableField<Drawable> = ObservableField()
 
+    val cityName = ObservableField<String>()
+
+    val latitude = ObservableField<String>()
+
+    val longitude = ObservableField<String>()
+
+    val temparatureInDegreeCelcius = MutableLiveData<String>()
+
+    val weatherCondition = MutableLiveData<String>()
+
+    val getLocationRequestClick = MutableLiveData<CustomEventLiveData<Boolean>>()
+
+    val getShowAllCitiesClick = MutableLiveData<CustomEventLiveData<Boolean>>()
+
     private val weatherDataClick = MutableLiveData<PairLocal<String, Any>>()
     val weatherData : LiveData<PairLocal<String, Any>>
     get() = weatherDataClick
@@ -47,22 +61,6 @@ class MainActivityViewModel @Inject constructor(
     private val weatherForecastDataByLatLongClick = MutableLiveData<PairLocal<String, Any>>()
     val weatherForecastByLatLongData : LiveData<PairLocal<String, Any>>
     get() = weatherForecastDataByLatLongClick
-
-    private val locationRequestClick = MutableLiveData<Boolean>()
-    val locationRequestData : LiveData<Boolean>
-    get() = locationRequestClick
-
-    val getShowAllCitiesClick = MutableLiveData<CustomEventLiveData<Boolean>>()
-
-    val cityName = ObservableField<String>()
-
-    val latitude = ObservableField<String>()
-
-    val longitude = ObservableField<String>()
-
-    val temparatureInDegreeCelcius = MutableLiveData<String>()
-
-    val weatherCondition = MutableLiveData<String>()
 
     init {
         cityName.set("Kuala Lumpur")
