@@ -47,11 +47,11 @@ class MainActivityViewModel @Inject constructor(
     val getShowAllCitiesClick = MutableLiveData<CustomEventLiveData<Boolean>>()
 
     private val weatherDataClick = MutableLiveData<PairLocal<String, Any>>()
-    val weatherData : LiveData<PairLocal<String, Any>>
+    val weatherDataByCityName : LiveData<PairLocal<String, Any>>
     get() = weatherDataClick
 
     private val weatherForecastDataClick = MutableLiveData<PairLocal<String, Any>>()
-    val weatherForecastData : LiveData<PairLocal<String, Any>>
+    val weatherForecastDataByCityName : LiveData<PairLocal<String, Any>>
     get() = weatherForecastDataClick
 
     private val weatherDataByLatLongClick = MutableLiveData<PairLocal<String, Any>>()

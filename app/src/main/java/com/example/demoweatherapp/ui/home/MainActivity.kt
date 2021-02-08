@@ -254,11 +254,11 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
                     }
                 })
 
-                weatherData.observe(this@MainActivity, Observer { weatherLiveData ->
+                weatherDataByCityName.observe(this@MainActivity, Observer { weatherLiveData ->
                     generateWeatherInformation(this,weatherLiveData)
                 })
 
-                weatherForecastData.observe(this@MainActivity, Observer {
+                weatherForecastDataByCityName.observe(this@MainActivity, Observer {
                     generateForecastAdapter(it)
                 })
 
