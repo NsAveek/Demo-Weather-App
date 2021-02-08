@@ -266,8 +266,6 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
         }
     }
 
-
-
     private fun prepareForecastAdapter(forecastData: ForecastData) {
         viewModel.prepareForecastAdapterData(forecastData.list, forecastData.city.name).observe(this, Observer {
             it?.let {

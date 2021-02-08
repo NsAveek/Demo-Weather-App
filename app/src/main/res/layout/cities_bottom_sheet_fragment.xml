@@ -13,32 +13,51 @@
     app:behavior_hideable="true"
     app:behavior_peekHeight="80dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-    android:background="@color/disable_grey">
+    android:colorBackground="@android:color/transparent"
+    >
 
-    <TextView
-        android:id="@+id/cities_title"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="CITIES"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        android:gravity="center"
-        style="@style/city_title_style"/>
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="@color/cardview_dark_background"
+        app:cardCornerRadius="@dimen/dp16"
+        android:layout_marginTop="@dimen/dp24"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/all_cities_rcv"
-        android:layout_width="match_parent"
-        android:layout_height="320dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cities_title"
-        app:layout_constraintVertical_bias="0.06999999" />
+            <TextView
+                android:id="@+id/cities_title"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="CITIES"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                android:gravity="center"
+                style="@style/city_title_style"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/all_cities_rcv"
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cities_title"
+                app:layout_constraintVertical_bias="0.06999999" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

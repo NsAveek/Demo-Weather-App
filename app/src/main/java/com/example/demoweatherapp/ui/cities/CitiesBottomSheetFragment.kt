@@ -54,7 +54,7 @@ class CitiesBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme)
         viewModel = ViewModelProviders.of(this, viewModelProviderFactory)
             .get(CitiesBottomSheetViewModel::class.java)
 
