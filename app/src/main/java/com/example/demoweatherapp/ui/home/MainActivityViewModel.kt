@@ -42,6 +42,9 @@ class MainActivityViewModel @Inject constructor(
 
     val weatherCondition = MutableLiveData<String>()
 
+    // The custom event live data is helpful when multiple observers are watching the event
+    // otherwise use singleLiveEvent
+
     val getLocationRequestClick = MutableLiveData<CustomEventLiveData<Boolean>>()
 
     val getShowAllCitiesClick = MutableLiveData<CustomEventLiveData<Boolean>>()
@@ -62,18 +65,16 @@ class MainActivityViewModel @Inject constructor(
     val weatherForecastByLatLongData : LiveData<PairLocal<String, Any>>
     get() = weatherForecastDataByLatLongClick
 
+    // The purpose of init here is to make sure we do not need to
+    // re-instantiate viewmodel if device is rotated
+
     init {
         cityName.set("Kuala Lumpur")
         getWeatherData()
         getWeatherForecastData()
     }
 
-    /**
-     * Observe weather data click event and triggers getWeatherDataClick event
-     * @param none
-     * @return none
-     **/
-    fun openWeatherData() {
+    fun getWeatherDataInformation() {
         getWeatherData()
         getWeatherForecastData()
     }

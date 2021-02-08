@@ -14,7 +14,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -48,12 +47,7 @@ import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.json.JSONObject
 import retrofit2.HttpException
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -330,7 +324,7 @@ class MainActivity : NetworkActivity(), LifecycleOwner, HasAndroidInjector {
                 it.cityName?.let { valueName ->
                     valueName.set(event.getMessage())
                 }
-                it.openWeatherData()
+                it.getWeatherDataInformation()
             }
         }
     }
